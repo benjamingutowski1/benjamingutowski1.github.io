@@ -4,9 +4,9 @@
         <title> BEN'S EMPORIUM </title>
         <style>
             body {
-                background-image: url(https://image.freepik.com/free-vector/gradient-abstract-background-design_23-2149066049.jpg);
+                background-image: url(https://cdn.pixabay.com/photo/2016/05/24/16/48/mountains-1412683__480.png);
                 background-repeat: no-repeat;
-                background-size: 100% 250%;
+                background-size: 100% 150%;
                 color:royalblue;
             }
             #title {
@@ -19,6 +19,7 @@
                 display: block;
                 margin-left: auto;
                 margin-right: auto;
+                position: relative;
             }
             #backButton {
                 color: rgb(216, 178, 8);
@@ -40,9 +41,16 @@
                 z-index: 1; /* Stay on top */
                 top: 0; /* Stay at the top */
                 left: 0;
-                background-color: rgb(83, 67, 79); /* Black */
+                background-color: rgb(9, 40, 82); /* Black */
                 overflow-x: hidden; /* Disable horizontal scroll */
                 padding-top: 30px;
+            }
+            #clicksMessage {
+                margin: left;
+                font-family: 'Times New Roman', Times, serif;
+                font-size: 23px;
+                font-weight: bold;
+                color: rgb(255, 206, 115);
             }
 
         </style>
@@ -52,9 +60,57 @@
             <h1 id = "title"> "AYO FOOL, DAB ME UP" </h1>
             <div class = "options">
                 <a href = "index.html" id = "backButton"> NEVERMIND. </a>
+                <p id = "clicksMessage"> Clicks: 0 </p>
             </div>
         </div> 
-        <img id = "clickOnMe" alt = "Dab Me Up" src = "data:image/png;base64,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">
+        <img id = "clickOnMe" alt = "Dab Me Up" src ="dabMeUp.png">
         sup
     </body>
 </html>
+<script>
+    //This function takes a cookie name and returns the value. Be sure to parse the text to an integer if it's supposed to be a numerical value.
+  function getCookiesValue(cookiesName) {
+    splitCookies = document.cookie.split("; ");
+    for (var index = 1; index <= splitCookies.length - 1; index++) {
+      var splitSplitCookies = splitCookies[index];
+      splitSplitCookies = splitSplitCookies.split("=")
+      if (splitSplitCookies[0] == cookiesName) {
+        return splitSplitCookies[1]
+      }
+    }
+  }
+  //This function deletes all of the current cookies.
+  function deleteAllCookies() {
+    var cookies = document.cookie.split(";");
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i];
+      var eqPos = cookie.indexOf("=");
+      var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
+  }
+  var splitCookies = document.cookie.split("; ");
+  //updateCheck should only be raised, it should never go down. Whenever you want to clear everyone's progress and get rid of their cookies, set it higher by 1.
+  //ex: if it was "updateCheck=1", set the new one to "updateCheck=2"
+  var updateCheck = "updateCheck=1"
+  if (splitCookies.includes(updateCheck) === false) {
+    //This code runs on the first time loading a website or after an update (forced progress/cookies clear)
+    deleteAllCookies();
+    document.cookie = updateCheck;
+    var cookiesWork = 1;
+    var clicks = 0
+    document.cookie = "clicks=0";
+  } else {
+    //This code runs on every other join except the first one or after an update/forced clear.
+    var clicks = parseInt(getCookiesValue("clicks"), 10)
+    document.getElementById("clicksMessage").innerText = "Clicks: " + clicks;
+  }
+  var image = document.getElementById("clickOnMe");
+  //This code runs when you click on the image.
+  image.onclick = function(clickOn) {
+    clicks += 1;
+    var cookieSaveClicks = "clicks=" + clicks;
+    document.cookie = cookieSaveClicks;
+    document.getElementById("clicksMessage").innerText = "Clicks: " + clicks;
+  }
+</script>
