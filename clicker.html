@@ -52,7 +52,23 @@
                 font-weight: bold;
                 color: rgb(255, 206, 115);
             }
-
+            #timerMessage {
+              margin-left: auto;
+              margin-right: auto;
+              text-align: center;
+              font-family: 'Times New Roman', Times, serif;
+              font-size: 50px;
+              font-weight: bold;
+              color:rgb(255, 255, 255);
+              top: -100px;
+            }
+            #timerBar {
+              height: 25px;
+              width: 250px;
+              margin-left: auto;
+              margin-right: auto;
+              background-color: rgb(63, 179, 63);
+            }
         </style>
     </head>
     <body>
@@ -64,7 +80,11 @@
             </div>
         </div> 
         <img id = "clickOnMe" alt = "Dab Me Up" src ="dabMeUp.png">
-        sup
+        <div id = "timer">
+          <p id = "timerMessage"> 0.0s </p>
+          <div id = "timerBar">
+          </div>
+        </div>
     </body>
 </html>
 <script>
@@ -89,6 +109,28 @@
       document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
     }
   }
+  function timer() {
+    timeLeft = timeLeft - 0.01;
+    timeLeft = timeLeft.toFixed(2);
+    barChange += 1;
+    if (barChange >= 2) {
+      barChange = 0
+      bar = document.getElementById("timerBar");
+      barStats = timeLeft * 50;
+      bar.style.width = barStats + "px"
+    }
+    if(timeLeft <= 0) {
+      timeLeft = 5;
+      onTimer();
+    }
+    document.getElementById("timerMessage").innerText = timeLeft;
+  }
+  function onTimer() {
+    clicks += 1;
+    var cookieSaveClicks = "clicks=" + clicks;
+    document.cookie = cookieSaveClicks;
+    document.getElementById("clicksMessage").innerText = "Clicks: " + clicks;
+  }
   var splitCookies = document.cookie.split("; ");
   //updateCheck should only be raised, it should never go down. Whenever you want to clear everyone's progress and get rid of their cookies, set it higher by 1.
   //ex: if it was "updateCheck=1", set the new one to "updateCheck=2"
@@ -98,14 +140,23 @@
     deleteAllCookies();
     document.cookie = updateCheck;
     var cookiesWork = 1;
-    var clicks = 0
+    var clicks = 0;
+    var timeLeft = 5.00;
+    var barChange = 0;
+    var bar = 0;
+    var barStats = 0;
     document.cookie = "clicks=0";
   } else {
     //This code runs on every other join except the first one or after an update/forced clear.
-    var clicks = parseInt(getCookiesValue("clicks"), 10)
+    var clicks = parseInt(getCookiesValue("clicks"), 10);
     document.getElementById("clicksMessage").innerText = "Clicks: " + clicks;
+    var timeLeft = 5.00;
+    var barChange = 0;
+    var barStats = 0;
+    var bar = 0;
   }
   var image = document.getElementById("clickOnMe");
+  const tenMsTimer = setInterval(timer,10); 
   //This code runs when you click on the image.
   image.onclick = function(clickOn) {
     clicks += 1;
