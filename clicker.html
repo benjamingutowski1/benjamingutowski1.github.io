@@ -69,6 +69,22 @@
               margin-right: auto;
               background-color: rgb(63, 179, 63);
             }
+            .monsterBox {
+              top: 5%;
+              left: 83%;
+              position: absolute;
+              height: 200px;
+              width: 200px;
+              background-color: rgb(94, 94, 94);
+              font-family: times 'Times New Roman', Times, serif;
+              font-size: 20px;
+              color:rgb(212, 212, 212);
+              border-style:solid;
+              border-color: black;
+            }
+            .monsterBox #health {
+              text-align: center;
+            }
         </style>
     </head>
     <body>
@@ -79,8 +95,11 @@
                 <p id = "clicksMessage"> Clicks: 0 </p>
             </div>
         </div> 
-        <img id = "clickOnMe" alt = "Dab Me Up" src ="dabMeUp.png">
-        <div id = "timer">
+        <img id = "clickOnMe" alt = "Dab Me Up" src ="images/dabMeUp.png">
+        <div class = "monsterBox">
+          <p id = "health"> Health: 30 </p>
+        </div>
+        <div class = "timer">
           <p id = "timerMessage"> 0.0s </p>
           <div id = "timerBar">
           </div>
@@ -125,6 +144,7 @@
     }
     document.getElementById("timerMessage").innerText = timeLeft;
   }
+  //What happens when the timer ends.
   function onTimer() {
     clicks += 1;
     var cookieSaveClicks = "clicks=" + clicks;

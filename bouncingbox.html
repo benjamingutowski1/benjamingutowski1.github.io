@@ -18,5 +18,10 @@
 </html>
 <script>
     var box = document.getElementById("box");
-    box.style.left = "100px";
+    var leftAmount = 100;
+    setInterval(update,1);
+    function update() {
+        leftAmount += 1;
+        box.style.left = leftAmount + "px";
+    }
 </script>
