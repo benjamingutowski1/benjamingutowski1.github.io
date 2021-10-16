@@ -61,6 +61,18 @@
               font-weight: bold;
               color:rgb(255, 255, 255);
               top: -100px;
+              line-height: 3px;
+            }
+            #pauseTimerMessage {
+              margin-left: auto;
+              margin-right: auto;
+              text-align: center;
+              font-family: 'Times New Roman', Times, serif;
+              font-size: 15px;
+              font-weight: bold;
+              color:rgb(255, 255, 255);
+              top: -100px;
+              line-height: 1px;
             }
             #timerBar {
               height: 25px;
@@ -68,6 +80,9 @@
               margin-left: auto;
               margin-right: auto;
               background-color: rgb(63, 179, 63);
+              border-style: double;
+              border-color: black;
+              border-width: 3px;
             }
             .monsterBox {
               top: 5%;
@@ -79,12 +94,29 @@
               font-family: times 'Times New Roman', Times, serif;
               font-size: 20px;
               color:rgb(212, 212, 212);
-              border-style:solid;
+              border-style: double;
               border-color: black;
+              border-width: 7px;
             }
-            .monsterBox #health {
+            .monsterBox #monsterHealth {
               text-align: center;
+              line-height: 7px;
             }
+            .monsterBox #monsterName {
+              text-align: center;
+              font-size: 30px;
+              font-weight: bold;
+              line-height: 10px;
+              color:rgb(185, 107, 39)
+            }
+            .noselect {
+              -webkit-touch-callout: none; /* iOS Safari */
+              -webkit-user-select: none; /* Safari */
+              -khtml-user-select: none; /* Konqueror HTML */
+              -moz-user-select: none; /* Firefox */
+              -ms-user-select: none; /* Internet Explorer/Edge */
+              user-select: none; /* Non-prefixed version, currently supported by Chrome and Opera */
+}
         </style>
     </head>
     <body>
@@ -97,10 +129,12 @@
         </div> 
         <img id = "clickOnMe" alt = "Dab Me Up" src ="images/dabMeUp.png">
         <div class = "monsterBox">
-          <p id = "health"> Health: 30 </p>
+          <p id = "monsterName"> NAME </p>
+          <p id = "monsterHealth"> Health: 30 </p>
         </div>
         <div class = "timer">
-          <p id = "timerMessage"> 0.0s </p>
+          <p id = "timerMessage" class = "noselect"> RESUME GAME </p>
+          <p id = "pauseTimerMessage" class = "noselect"> </p>
           <div id = "timerBar">
           </div>
         </div>
@@ -136,9 +170,19 @@
       barChange = 0
       bar = document.getElementById("timerBar");
       barStats = timeLeft * 50;
+      if (nextPause === 1) {
+        barStats = barStats / 2;
+        barStats = Math.round(barStats);
+      }
       bar.style.width = barStats + "px"
     }
-    if(timeLeft <= 0) {
+    if (timeLeft <= 0) {
+      if (nextPause === 1) {
+        document.getElementById("monsterHealth").innerText = "Health: " + monsterHealth;
+        document.getElementById("monsterName").innerText = monster;
+        nextPause = 0;
+        document.getElementById("pauseTimerMessage").innerText = "";
+      }
       timeLeft = 5;
       onTimer();
     }
@@ -150,35 +194,82 @@
     var cookieSaveClicks = "clicks=" + clicks;
     document.cookie = cookieSaveClicks;
     document.getElementById("clicksMessage").innerText = "Clicks: " + clicks;
+    monsterHealth = monsterHealth - 1;
+    document.getElementById("monsterHealth").innerText = "Health: " + monsterHealth;
+    document.cookie = "monsterhealth=" + monsterHealth;
+    if (monsterHealth <= 1) {
+      monsterIndex = getRandomInt(monsterNames.length);
+      monster = monsterNames[monsterIndex];
+      monsterHealth = monsterHealthAmounts[monsterIndex];
+      document.cookie = "monsterhealth=" + monsterHealth;
+      document.cookie = "monsterindex=" + monsterIndex;
+      document.getElementById("monsterHealth").innerText = "Health: Unknown";
+      document.getElementById("monsterName").innerText = "UNKNOWN";
+      nextPause = 1;
+      document.getElementById("pauseTimerMessage").innerText = "(click to pause)";
+      document.getElementById("timerMessage").innerText = "NEXT MONSTER IN 10";
+      timeLeft = 10;
+    }
+  }
+  //Gets a random number.
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * max);
   }
   var splitCookies = document.cookie.split("; ");
+  //All of the variables that don't have to be reloaded from previous saves.
+  var timeLeft = 5.00;
+  var barChange = 0;
+  var bar = 0;
+  var barStats = 0;
+  var monsterNames = ["WOLF"];
+  var monsterHealthAmounts = [30];
+  var nextPause = 0;
   //updateCheck should only be raised, it should never go down. Whenever you want to clear everyone's progress and get rid of their cookies, set it higher by 1.
   //ex: if it was "updateCheck=1", set the new one to "updateCheck=2"
-  var updateCheck = "updateCheck=1"
+  var updateCheck = "updateCheck=0.001"
   if (splitCookies.includes(updateCheck) === false) {
     //This code runs on the first time loading a website or after an update (forced progress/cookies clear)
     deleteAllCookies();
     document.cookie = updateCheck;
-    var cookiesWork = 1;
     var clicks = 0;
-    var timeLeft = 5.00;
-    var barChange = 0;
-    var bar = 0;
-    var barStats = 0;
     document.cookie = "clicks=0";
+    var monsterIndex = getRandomInt(monsterNames.length);
+    var monster = monsterNames[monsterIndex];
+    var monsterHealth = monsterHealthAmounts[monsterIndex];
+    document.cookie = "monsterhealth=" + monsterHealth;
+    document.cookie = "monsterindex=" + monsterIndex;
   } else {
     //This code runs on every other join except the first one or after an update/forced clear.
     var clicks = parseInt(getCookiesValue("clicks"), 10);
     document.getElementById("clicksMessage").innerText = "Clicks: " + clicks;
-    var timeLeft = 5.00;
-    var barChange = 0;
-    var barStats = 0;
-    var bar = 0;
+    var monsterIndex = parseInt(getCookiesValue("monsterindex"), 10);
+    var monsterHealth = parseInt(getCookiesValue("monsterhealth"), 10);
+    document.getElementById("monsterHealth").innerText = "Health: " + monsterHealth;
+    var monster = monsterNames[monsterIndex];
   }
+  document.getElementById("monsterName").innerText = monster;
   var image = document.getElementById("clickOnMe");
-  const tenMsTimer = setInterval(timer,10); 
+  var resetButton = document.getElementById("timerMessage");
+  var started = 0;
+  var tenMsTimer = 0;
+  var paused = 0;
+  resetButton.onclick = function() {
+    if (started === 0) {
+      started = 1;
+      tenMsTimer = setInterval(timer,10);
+      if (nextPause === 1) {
+        document.getElementById("pauseTimerMessage").innerText = "(click to pause)";
+      }
+    } else {
+      if (nextPause === 1 && started === 1) {
+        clearInterval(tenMsTimer);
+        started = 0;
+        document.getElementById("pauseTimerMessage").innerText = "(click to unpause)";
+      }
+    }
+  }
   //This code runs when you click on the image.
-  image.onclick = function(clickOn) {
+  image.onclick = function() {
     clicks += 1;
     var cookieSaveClicks = "clicks=" + clicks;
     document.cookie = cookieSaveClicks;
