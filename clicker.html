@@ -15,7 +15,8 @@
                 color: rgb(253, 229, 147);
             }
             #clickOnMe {
-                width: 500px;
+                width: 512px;
+                height: 512px;
                 display: block;
                 margin-left: auto;
                 margin-right: auto;
@@ -180,6 +181,8 @@
       if (nextPause === 1) {
         document.getElementById("monsterHealth").innerText = "Health: " + monsterHealth;
         document.getElementById("monsterName").innerText = monster;
+        monsterImage = monsterImages[monsterIndex];
+        image.src = monsterImage;
         nextPause = 0;
         document.getElementById("pauseTimerMessage").innerText = "";
       }
@@ -197,7 +200,7 @@
     monsterHealth = monsterHealth - 1;
     document.getElementById("monsterHealth").innerText = "Health: " + monsterHealth;
     document.cookie = "monsterhealth=" + monsterHealth;
-    if (monsterHealth <= 1) {
+    if (monsterHealth < 1) {
       monsterIndex = getRandomInt(monsterNames.length);
       monster = monsterNames[monsterIndex];
       monsterHealth = monsterHealthAmounts[monsterIndex];
@@ -224,6 +227,7 @@
   var monsterNames = ["WOLF"];
   var monsterHealthAmounts = [30];
   var nextPause = 0;
+  var monsterImages = ["images/pixel-wolf.png"];
   //updateCheck should only be raised, it should never go down. Whenever you want to clear everyone's progress and get rid of their cookies, set it higher by 1.
   //ex: if it was "updateCheck=1", set the new one to "updateCheck=2"
   var updateCheck = "updateCheck=0.001"
@@ -247,8 +251,10 @@
     document.getElementById("monsterHealth").innerText = "Health: " + monsterHealth;
     var monster = monsterNames[monsterIndex];
   }
+  var monsterImage = monsterImages[monsterIndex];
   document.getElementById("monsterName").innerText = monster;
   var image = document.getElementById("clickOnMe");
+  image.src = monsterImage;
   var resetButton = document.getElementById("timerMessage");
   var started = 0;
   var tenMsTimer = 0;
