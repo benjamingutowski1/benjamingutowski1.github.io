@@ -45,6 +45,9 @@
 <script>
     var box = document.getElementById("box");
     var container = document.getElementById("container");
+    var tracker = document.getElementById("tracker");
+    var infoLoc = container.offsetWidth + 20;
+    tracker.style.left = infoLoc + "px"; 
     var leftAmount = 100;
     var topAmount = 100;
     var directionLeft = 0;
@@ -66,22 +69,22 @@
         leftLocation = leftLocation * 100;
         if (topLocation >= 100) {
             directionTop = 1;
-            cornerCheck = 1;
+            cornerCheck += 1;
             hits += 1;
         }
         if (topLocation <= 0) {
             directionTop = 0;
-            cornerCheck = 1;
+            cornerCheck += 1;
             hits += 1;
         }
         if (leftLocation >= 100) {
             directionLeft = 1;
-            cornerCheck = 1;
+            cornerCheck += 1;
             hits += 1;
         }
         if (leftLocation <= 0) {
             directionLeft = 0;
-            cornerCheck = 1;
+            cornerCheck += 1;
             hits += 1;
         }
         if (directionLeft === 0) {
@@ -96,7 +99,12 @@
         if (directionTop === 1) {
             topAmount = topAmount - 1;
         }
-        document.getElementById("bounces").innerText = "Hits: " + hits;
+        document.getElementById("bounces").innerText = "Total Hits: " + hits;
+        if (cornerCheck >= 2) {
+            cornerHits += 1;
+        }
+        document.getElementById("cornerHits").innerText = "Corner Hits: " + cornerHits; 
+        cornerCheck = 0;
         box.style.left = leftAmount + "px";
         box.style.top = topAmount + "px";
     }
