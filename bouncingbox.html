@@ -2,11 +2,30 @@
 <html>
     <head>
         <style>
-            div {
+            #box {
                 width: 50px;
                 height: 50px;
                 background-color: red;
                 position: absolute;
+            }
+            #container {
+                position:absolute;
+                width: 750px;
+                height: 500px;
+                border-style: solid;
+                border-width: 5px;
+                top: 0%;
+                left: 0%;
+            }
+            .tracker {
+                height: 100px;
+                width: 200px;
+                border-style: solid;
+                border-width: 2px;
+                position: absolute;
+                top: 5px;
+                left: 770px;
+                text-align: center;
             }
         </style>
     </head>
@@ -14,14 +33,71 @@
         <div id = "box">
 
         </div>
+        <div id = "container">
+
+        </div>
+        <div class = "tracker">
+            <p id = "bounces"> Hits: 0 </p>
+            <p id = "cornerHits"> Corner Hits: 0 </p>
+        </div>
     </body>
 </html>
 <script>
     var box = document.getElementById("box");
+    var container = document.getElementById("container");
     var leftAmount = 100;
+    var topAmount = 100;
+    var directionLeft = 0;
+    var directionTop = 0;
+    var topLocation = 0;
+    var leftLocation = 0;
+    var mostTop = 0;
+    var mostLeft = 0;
+    var hits = 0;
+    var cornerHits = 0;
+    var cornerCheck = 0;
     setInterval(update,1);
     function update() {
-        leftAmount += 1;
+        mostTop = container.offsetHeight - 50;
+        mostLeft = container.offsetWidth - 50;
+        topLocation = topAmount / mostTop;
+        topLocation = topLocation * 100;
+        leftLocation = leftAmount / mostLeft;
+        leftLocation = leftLocation * 100;
+        if (topLocation >= 100) {
+            directionTop = 1;
+            cornerCheck = 1;
+            hits += 1;
+        }
+        if (topLocation <= 0) {
+            directionTop = 0;
+            cornerCheck = 1;
+            hits += 1;
+        }
+        if (leftLocation >= 100) {
+            directionLeft = 1;
+            cornerCheck = 1;
+            hits += 1;
+        }
+        if (leftLocation <= 0) {
+            directionLeft = 0;
+            cornerCheck = 1;
+            hits += 1;
+        }
+        if (directionLeft === 0) {
+            leftAmount += 1;
+        }
+        if (directionTop === 0) {
+            topAmount += 1;
+        }
+        if (directionLeft === 1) {
+            leftAmount = leftAmount - 1;
+        }
+        if (directionTop === 1) {
+            topAmount = topAmount - 1;
+        }
+        document.getElementById("bounces").innerText = "Hits: " + hits;
         box.style.left = leftAmount + "px";
+        box.style.top = topAmount + "px";
     }
 </script>
