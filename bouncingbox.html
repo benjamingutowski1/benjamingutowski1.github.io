@@ -86,6 +86,8 @@
     window.localStorage.setItem("cornerHits","0");
     var cornerMultiplier = 15;
     window.localStorage.setItem("cornerMultiplier","15");
+    var upgradePPBCost = 30;
+    window.localStorage.setItem("upgradePPBCost","30");
   } else {
     //This code runs on every other join except the first one or after an update/forced clear.
     var points = JSON.parse(window.localStorage.getItem("points"));
@@ -94,6 +96,7 @@
     var hits = JSON.parse(window.localStorage.getItem("totalHits"));
     var cornerHits = JSON.parse(window.localStorage.getItem("cornerHits"));
     var cornerMultiplier = JSON.parse(window.localStorage.getItem("cornerMultiplier"));
+    var upgradePPBCost = JSON.parge(window.localStorage.getItem("upgradePPBCost"));
   }
     var box = document.getElementById("box");
     var container = document.getElementById("container");
@@ -103,6 +106,7 @@
     var infoLocMessageWidth = container.offsetWidth - 10;
     var clickerBox = document.getElementById("clickerBox");
     var upgradeBox = document.getElementById("upgradeBox");
+    var upgradePoint
     upgradeBox.style.left = infoLoc + "px";
     tracker.style.left = infoLoc + "px";
     clickerBox.style.left = infoLoc + "px";
