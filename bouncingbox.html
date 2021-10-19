@@ -28,7 +28,7 @@
                 text-align: center;
             }
             #clickerBox {
-                height: 100px;
+                height: 50px;
                 width: 200px;
                 border-style: solid;
                 border-width: 2px;
@@ -36,6 +36,16 @@
                 left: 0px;
                 text-align: center;
                 position:absolute;
+            }
+            #messageBox {
+                height: 50px;
+                width: 5px;
+                border-style: solid;
+                border-width: 5px;
+                position: absolute;
+                text-align: center;
+                top: 5px;
+                left: 0px;
             }
         </style>
     </head>
@@ -53,14 +63,70 @@
         <div id = "clickerBox">
             <p id = "pointsMessage"> Points: 0 </p>
         </div>
+        <div id = "messageBox">
+            <p id = "message"> </p>
+        </div>
     </body>
 </html>
 <script>
+//This function takes a cookie name and returns the value. Be sure to parse the text to an integer if it's supposed to be a numerical value.
+function getCookiesValue(cookiesName) {
+    splitCookies = document.cookie.split("; ");
+    for (var index = 1; index <= splitCookies.length - 1; index++) {
+      var splitSplitCookies = splitCookies[index];
+      splitSplitCookies = splitSplitCookies.split("=")
+      if (splitSplitCookies[0] == cookiesName) {
+        return splitSplitCookies[1]
+      }
+    }
+  }
+  //This function deletes all of the current cookies.
+  function deleteAllCookies() {
+    var cookies = document.cookie.split(";");
+    for (var i = 0; i < cookies.length; i++) {
+      var cookie = cookies[i];
+      var eqPos = cookie.indexOf("=");
+      var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+      document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    }
+  }
+  var splitCookies = document.cookie.split("; ");
+  //updateCheck should only be raised, it should never go down. Whenever you want to clear everyone's progress and get rid of their cookies, set it higher by 1.
+  //ex: if it was "updateCheck=1", set the new one to "updateCheck=2"
+  var updateCheck = "updateCheck=0.001";
+  if (splitCookies.includes(updateCheck) === false) {
+    //This code runs on the first time loading a website or after an update (forced progress/cookies clear)
+    deleteAllCookies();
+    document.cookie = updateCheck;
+    var points = 0;
+    document.cookie = "points=0";
+    var pointGain = 1;
+    document.cookie = "pointGain=1";
+    var hits = 0;
+    document.cookie = "totalHits=0";
+    var cornerHits = 0;
+    document.cookie = "cornerHits=0";
+    var cornerMultiplier = 15;
+    document.cookie = "cornerMultiplier=15";
+  } else {
+    //This code runs on every other join except the first one or after an update/forced clear.
+    var points = parseInt(getCookiesValue("points"), 10);
+    document.getElementById("pointsMessage").innerText = "Points: " + points;
+    var pointGain = parseInt(getCookiesValue("pointGain"), 10);
+    var hits = parseInt(getCookiesValue("totalHits"), 10);
+    var cornerHits = parseInt(getCookiesValue("cornerHits"), 10);
+    var cornerMultiplier = parseInt(getCookiesValue("cornerMultiplier"), 10);
+  }
     var box = document.getElementById("box");
     var container = document.getElementById("container");
     var tracker = document.getElementById("tracker");
     var infoLoc = container.offsetWidth + 20;
+    var infoLocHeight = container.offsetHeight + 20;
+    var infoLocMessageWidth = container.offsetWidth - 10;
     var clickerBox = document.getElementById("clickerBox");
+    var messageBox = document.getElementById("messageBox");
+    messageBox.style.width = infoLocMessageWidth + "px";
+    messageBox.style.top = infoLocHeight + "px";
     clickerBox.style.left = infoLoc + "px";
     tracker.style.left = infoLoc + "px"; 
     var leftAmount = 100;
@@ -71,9 +137,8 @@
     var leftLocation = 0;
     var mostTop = 0;
     var mostLeft = 0;
-    var hits = 0;
-    var cornerHits = 0;
     var cornerCheck = 0;
+    var waitTime = 0;
     setInterval(update,1);
     function update() {
         mostTop = container.offsetHeight - 50;
@@ -86,21 +151,25 @@
             directionTop = 1;
             cornerCheck += 1;
             hits += 1;
+            document.cookie = "totalHits=" + hits;
         }
         if (topLocation <= 0) {
             directionTop = 0;
             cornerCheck += 1;
             hits += 1;
+            document.cookie = "totalHits=" + hits;
         }
         if (leftLocation >= 100) {
             directionLeft = 1;
             cornerCheck += 1;
             hits += 1;
+            document.cookie = "totalHits=" + hits;
         }
         if (leftLocation <= 0) {
             directionLeft = 0;
             cornerCheck += 1;
             hits += 1;
+            document.cookie = "totalHits=" + hits;
         }
         if (directionLeft === 0) {
             leftAmount += 1;
@@ -117,9 +186,23 @@
         document.getElementById("bounces").innerText = "Total Hits: " + hits;
         if (cornerCheck >= 2) {
             cornerHits += 1;
+            document.cookie = "cornerHits=" + cornerHits;
             hits -= 1;
+            points += pointGain * cornerMultiplier
+            document.getElementById("message").innerText = "You just got a Corner Hit!";
+            waitTime = 3000;
+        } else if (cornerCheck === 1) {
+            points += pointGain;
+            document.cookie = "points=" + points;
         }
-        document.getElementById("cornerHits").innerText = "Corner Hits: " + cornerHits; 
+        if (waitTime > 0) {
+            waitTime -= 1;
+        }
+        if (waitTime = 0) {
+            document.getElementById("message").innerText = "";
+        }
+        document.getElementById("cornerHits").innerText = "Corner Hits: " + cornerHits;
+        document.getElementById("pointsMessage").innerText = "Points: " + points;
         cornerCheck = 0;
         box.style.left = leftAmount + "px";
         box.style.top = topAmount + "px";
