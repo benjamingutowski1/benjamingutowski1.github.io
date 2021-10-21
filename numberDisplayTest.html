@@ -68,9 +68,10 @@
                 finalNumber = wholeNum * checkpoint;
                 displayNumber = wholeNum + currentAbbreviation;
             }
-            document.getElementById("startNum").innerText = startingNumber;
-            document.getElementById("newNum").innerText = finalNumber;
-            document.getElementById("displayNum").innerText = displayNumber;
+            return([finalNumber,displayNumber]);
         }
-    </script>
+        document.getElementById("startNum").innerText = startingNumber;
+        document.getElementById("newNum").innerText = displayNums(startingNumber)[0];
+        document.getElementById("displayNum").innerText = displayNums(startingNumber)[1];
+        </script>
 </html>
