@@ -28,47 +28,49 @@
         var abbrDecimalPlaces = 0;
         var abbrDeciCheck = 0;
         var displayNumber = 0;
-        var startingNumber = 1367000;
+        var startingNumber = 1086000;
         var finalNumber = "couldn't process";
         var abbreviationsLength = abbreviations.length - 1;
         //The variables above need to be set on join :)
-        for (var i = 0; i <= abbreviationsLength; i++) {
-            if (startingNumber >= abbreviationNums[i]) {
-                checkpoint = abbreviationNums[i];
-                currentAbbreviation = abbreviations[i];
+        function displayNums(startingNumber) {
+            for (var i = 0; i <= abbreviationsLength; i++) {
+                if (startingNumber >= abbreviationNums[i]) {
+                    checkpoint = abbreviationNums[i];
+                    currentAbbreviation = abbreviations[i];
+                }
             }
+            if (currentAbbreviation === 0) {
+                finalNumber = startingNumber;
+                displayNumber = startingNumber;
+            } else {
+                remainderCheck = startingNumber / checkpoint;
+                remainderLength = remainderCheck.toString();
+                remainderLength = remainderLength.split(".");
+                wholeNum = remainderLength[0];
+                abbrDecimalPlaces = wholeNum.split("");
+                abbrDecimalPlaces = 3 - abbrDecimalPlaces.length;
+                remainderLength = remainderLength[1];
+                remainderLength = remainderLength.split(""); 
+                abbrRemCheck = parseInt(remainderLength[abbrDecimalPlaces], 10);
+                if (abbrRemCheck >= 5) {
+                    abbrDeciCheck = abbrDecimalPlaces - 1;
+                    abbrRound = parseInt(remainderLength[abbrDeciCheck], 10);
+                    abbrRound += 1;
+                    remainderLength[abbrDeciCheck] = abbrRound.toString();
+                }
+                abbrDecimals = "";
+                for (var i = 0; i < abbrDecimalPlaces; i++) {
+                    abbrDecimals = abbrDecimals + remainderLength[i];
+                }
+                abbrDecimals = parseInt(abbrDecimals, 10) / Math.pow(10,abbrDecimalPlaces);
+                wholeNum = parseInt(wholeNum, 10);
+                wholeNum = wholeNum + abbrDecimals;
+                finalNumber = wholeNum * checkpoint;
+                displayNumber = wholeNum + currentAbbreviation;
+            }
+            document.getElementById("startNum").innerText = startingNumber;
+            document.getElementById("newNum").innerText = finalNumber;
+            document.getElementById("displayNum").innerText = displayNumber;
         }
-        if (currentAbbreviation === 0) {
-            finalNumber = startingNumber
-        } else {
-            remainderCheck = startingNumber / checkpoint;
-            remainderLength = remainderCheck.toString();
-            remainderLength = remainderLength.split(".");
-            wholeNum = remainderLength[0];
-            abbrDecimalPlaces = wholeNum.split("");
-            abbrDecimalPlaces = 3 - abbrDecimalPlaces.length;
-            remainderLength = remainderLength[1];
-            remainderLength = remainderLength.split(""); 
-            bbrRemCheck = parseInt(remainderLength[abbrDecimalPlaces], 10);
-            if (abbrRemCheck >= 5) {
-                abbrDeciCheck = abbrDecimalPlaces - 1;
-                abbrRound = parseInt(remainderLength[abbrDeciCheck], 10);
-                abbrRound += 1;
-                remainderLength[abbrDeciCheck] = abbrRound.toString();
-            }
-            alert(remainderLength);
-            abbrDecimals = "";
-            for (var i = 0; i < abbrDecimalPlaces; i++) {
-                abbrDecimals = abbrDecimals + remainderLength[i];
-            }
-            abbrDecimals = parseInt(abbrDecimals, 10) / 100;
-            wholeNum = parseInt(wholeNum, 10);
-            wholeNum = wholeNum + abbrDecimals;
-            finalNumber = wholeNum * checkpoint;
-            displayNumber = wholeNum + currentAbbreviation;
-        }
-        document.getElementById("startNum").innerText = startingNumber;
-        document.getElementById("newNum").innerText = finalNumber;
-        document.getElementById("displayNum").innerText = displayNumber;
     </script>
 </html>
