@@ -43,7 +43,7 @@
         }
 
         #upgradeBox {
-            height: 50px;
+            height: 85px;
             width: 400px;
             border-style: solid;
             border-width: 2px;
@@ -88,6 +88,7 @@
     </div>
     <div id="upgradeBox">
         <p id="upgradePointsPerBounce" class="noselect"> Upgrade Points Per Hit [75] </p>
+        <p id = "upgradeSpeed" class = "noselect"> Upgrade Speed [75] </p>
     </div>
 </body>
 
@@ -95,7 +96,7 @@
 <script>
     //updateCheck should only be raised, it should never go down. Whenever you want to clear everyone's progress and get rid of their cookies, set it higher by 1.
     //ex: if it was "updateCheck=1", set the new one to "updateCheck=2"
-    var updateCheck = 0.002;
+    var updateCheck = 0.0032;
     if (JSON.parse(window.localStorage.getItem("updateCheck")) != updateCheck) {
         //This code runs on the first time loading a website or after an update (forced progress/cookies clear)
         var stringUpdateCheck = "" + updateCheck + "";
@@ -110,8 +111,8 @@
         window.localStorage.setItem("cornerHits", "0");
         var cornerMultiplier = 15;
         window.localStorage.setItem("cornerMultiplier", "15");
-        var upgradePPBCost = 75;
-        window.localStorage.setItem("upgradePPBCost", "75");
+        var upgradePPBCost = 15;
+        window.localStorage.setItem("upgradePPBCost", "15");
         var leftAmount = 100;
         window.localStorage.setItem("leftAmount", "100");
         var topAmount = 100;
@@ -120,6 +121,8 @@
         window.localStorage.setItem("directionLeft","0");
         var directionTop = 0;
         window.localStorage.setItem("directionTop","0");
+        var speed = 1;
+        window.localStorage.setItem("speed","1");
     } else {
         //This code runs on every other join except the first one or after an update/forced clear.
         var points = JSON.parse(window.localStorage.getItem("points"));
@@ -133,6 +136,7 @@
         var topAmount = JSON.parse(window.localStorage.getItem("topAmount"));
         var directionLeft = JSON.parse(window.localStorage.getItem("directionLeft"));
         var directionTop = JSON.parse(window.localStorage.getItem("directionTop"));
+        var speed = JSON.parse(window.localStorage.getItem("speed"));
     }
     var box = document.getElementById("box");
     var container = document.getElementById("container");
@@ -175,6 +179,8 @@
     var cornerMultiplierSave = 0;
     //vars to set upgrade item clicks
     var upgradePointsPerHit = document.getElementById("upgradePointsPerBounce");
+    var upgradeSpeed = document.getElementById("upgradeSpeed");
+    document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[0] + "]";
     document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[0] + "]";
     upgradePointsPerHit.onclick = function() {
         if (points >= upgradePPBCost) {
@@ -183,10 +189,24 @@
             upgradePPBCost = Math.round(upgradePPBCost);
             upgradePPBCost = displayNums(upgradePPBCost)[1];
             document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[0] + "]";
+            document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[0] + "]";
             window.localStorage.setItem("upgradePPBCost", "" + upgradePPBCost + "");
             pointGain = pointGain * 1.15;
             pointGain = Math.ceil(pointGain);
             window.localStorage.setItem("pointGain","" + pointGain + "");
+        }
+    }
+    upgradeSpeed.onclick = function() {
+        if (points >= upgradePPBCost) {
+            points = points - upgradePPBCost;
+            upgradePPBCost = upgradePPBCost * 1.25;
+            upgradePPBCost = Math.round(upgradePPBCost);
+            upgradePPBCost = displayNums(upgradePPBCost)[1];
+            document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[0] + "]";
+            document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[0] + "]";
+            window.localStorage.setItem("upgradePPBCost", "" + upgradePPBCost + "");
+            speed += 1;
+            window.localStorage.setItem("speed","" + speed + "");
         }
     }
     //This function is for upgrade displays. It returns an array with [0] being the actual value
@@ -271,7 +291,7 @@
         }
         return (displayNumber);
     }
-    setInterval(update, 1);
+    setInterval(update, 10);
     function update() {
         mostTop = container.offsetHeight - 50;
         mostLeft = container.offsetWidth - 50;
@@ -296,16 +316,16 @@
             cornerCheck += 1;
         }
         if (directionLeft === 0) {
-            leftAmount += 1;
+            leftAmount += speed;
         }
         if (directionTop === 0) {
-            topAmount += 1;
+            topAmount += speed;
         }
         if (directionLeft === 1) {
-            leftAmount = leftAmount - 1;
+            leftAmount = leftAmount - speed;
         }
         if (directionTop === 1) {
-            topAmount = topAmount - 1;
+            topAmount = topAmount - speed;
         }
         window.localStorage.setItem("leftAmount", "" + leftAmount + "");
         window.localStorage.setItem("topAmount", "" + topAmount + "");
