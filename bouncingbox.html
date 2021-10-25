@@ -62,6 +62,13 @@
             left: 0px;
             position: absolute;
         }
+        #betBoxTitle {
+            font-size: 25px;
+            line-height: 3px;
+        }
+        #betMultiplier {
+            font-size: 20px;
+        }
         .noselect {
             -webkit-touch-callout: none;
             /* iOS Safari */
@@ -102,7 +109,8 @@
         <p id = "upgradeCM" class = "noselect"> Upgrade Corner Multiplier [75] </p>
     </div>
     <div id="betBox">
-
+        <p id="betBoxTitle"> <strong> Gambling </strong> </p>
+        <p id="betMultiplier"> 1.00x </p>
     </div>
 </body>
 
@@ -137,6 +145,8 @@
         window.localStorage.setItem("directionTop","0");
         var speed = 1;
         window.localStorage.setItem("speed","1");
+        var bettingAmt = 1;
+        window.localStorage.setItem("bettingAmt","1");
     } else {
         //This code runs on every other join except the first one or after an update/forced clear.
         var points = JSON.parse(window.localStorage.getItem("points"));
@@ -151,6 +161,11 @@
         var directionLeft = JSON.parse(window.localStorage.getItem("directionLeft"));
         var directionTop = JSON.parse(window.localStorage.getItem("directionTop"));
         var speed = JSON.parse(window.localStorage.getItem("speed"));
+        var bettingAmt = JSON.parse(window.localStorage.getItem("bettingAmt"));
+        if (typeof bettingAmt === "undefined") {
+            bettingAmt = 1;
+            window.localStorage.setItem("bettingAmt","1");
+        }
     }
     var box = document.getElementById("box");
     var container = document.getElementById("container");
@@ -171,9 +186,9 @@
     var remainderCheck = 0;
     var remainderLength = 0;
     var wholeNum = 0;
-    //abbreviations lists and specifics
-    var abbreviations = ["m"];
-    var abbreviationNums = [1000000];
+    //abbreviations lists and specifics; current number of zeros: 12
+    var abbreviations = ["m","b","t"];
+    var abbreviationNums = [1000000,1000000000,1000000000000];
     //end of that
     var abbrDecimals = 0;
     var abbrRound = 0;
@@ -189,6 +204,9 @@
     var mostTop = 0;
     var mostLeft = 0;
     var cornerCheck = 0;
+    var betMultiplier = 0;
+    var topPercent = 0;
+    var leftPercent = 0;
     //vars to set upgrade item clicks
     var upgradePointsPerHit = document.getElementById("upgradePointsPerBounce");
     var upgradeSpeed = document.getElementById("upgradeSpeed");
@@ -348,15 +366,19 @@
         }
         if (directionLeft === 0) {
             leftAmount += speed;
+            leftPercent = 100 - leftAmount;
         }
         if (directionTop === 0) {
             topAmount += speed;
+            topPercent = 100 - topAmount;
         }
         if (directionLeft === 1) {
             leftAmount = leftAmount - speed;
+            leftPercent = leftAmount;
         }
         if (directionTop === 1) {
             topAmount = topAmount - speed;
+            topPercent = topAmount;
         }
         if (topAmount > mostTop) {
             topAmount = mostTop;
@@ -370,6 +392,13 @@
         if (leftAmount < 0) {
             leftAmount = 0;
         }
+        if (leftPercent >= topPercent) {
+            betMultiplier = topPercent;
+        } else {
+            betMultiplier = leftPercent;
+        }
+        betMultiplier = betMultiplier / 100;
+        document.getElementById("betMultiplier").innerText = betMultiplier + "x"
         window.localStorage.setItem("leftAmount", "" + leftAmount + "");
         window.localStorage.setItem("topAmount", "" + topAmount + "");
         window.localStorage.setItem("directionLeft","" + directionLeft + "");
