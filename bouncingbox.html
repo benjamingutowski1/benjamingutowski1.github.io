@@ -32,7 +32,7 @@
         }
 
         #clickerBox {
-            height: 100px;
+            height: 120px;
             width: 400px;
             border-style: solid;
             border-width: 2px;
@@ -43,16 +43,25 @@
         }
 
         #upgradeBox {
-            height: 85px;
+            height: 115px;
             width: 400px;
             border-style: solid;
             border-width: 2px;
-            top: 245px;
+            top: 265px;
             position: absolute;
             text-align: center;
             left: 0px;
         }
-
+        #betBox {
+            height: 500px;
+            width: 260px;
+            border-style: solid;
+            border-width: 2px;
+            top: 5px;
+            text-align: center;
+            left: 0px;
+            position: absolute;
+        }
         .noselect {
             -webkit-touch-callout: none;
             /* iOS Safari */
@@ -85,10 +94,15 @@
     <div id="clickerBox">
         <p id="pointsMessage"> Points: 0 </p>
         <p id="pointsPerHitMessage"> Points Per Hit: 0 </p>
+        <p id="cornerMultiMessage"> Corner Multiplier: 15 </p>
     </div>
     <div id="upgradeBox">
         <p id="upgradePointsPerBounce" class="noselect"> Upgrade Points Per Hit [75] </p>
         <p id = "upgradeSpeed" class = "noselect"> Upgrade Speed [75] </p>
+        <p id = "upgradeCM" class = "noselect"> Upgrade Corner Multiplier [75] </p>
+    </div>
+    <div id="betBox">
+
     </div>
 </body>
 
@@ -141,11 +155,14 @@
     var box = document.getElementById("box");
     var container = document.getElementById("container");
     var tracker = document.getElementById("tracker");
-    var infoLoc = container.offsetWidth + 20;
+    var infoLoc = container.offsetWidth + 300;
     var infoLocHeight = container.offsetHeight + 20;
+    var infoLoc2 = container.offsetWidth + 20;
     var infoLocMessageWidth = container.offsetWidth - 10;
     var clickerBox = document.getElementById("clickerBox");
     var upgradeBox = document.getElementById("upgradeBox");
+    var betBox = document.getElementById("betBox");
+    betBox.style.left = infoLoc2 + "px";
     upgradeBox.style.left = infoLoc + "px";
     tracker.style.left = infoLoc + "px";
     clickerBox.style.left = infoLoc + "px";
@@ -172,16 +189,13 @@
     var mostTop = 0;
     var mostLeft = 0;
     var cornerCheck = 0;
-    var pointsSave = 0;
-    var pointGainSave = 0;
-    var hitsSave = 0;
-    var cornerHitsSave = 0;
-    var cornerMultiplierSave = 0;
     //vars to set upgrade item clicks
     var upgradePointsPerHit = document.getElementById("upgradePointsPerBounce");
     var upgradeSpeed = document.getElementById("upgradeSpeed");
+    var upgradeCM = document.getElementById("upgradeCM");
     document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[0] + "]";
     document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[0] + "]";
+    document.getElementById("upgradeCM").innerText = "Upgrade Corner Multiplier [" + displayNums(upgradePPBCost)[0] + "]";
     upgradePointsPerHit.onclick = function() {
         if (points >= upgradePPBCost) {
             points = points - upgradePPBCost;
@@ -190,6 +204,7 @@
             upgradePPBCost = displayNums(upgradePPBCost)[1];
             document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[0] + "]";
             document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[0] + "]";
+            document.getElementById("upgradeCM").innerText = "Upgrade Corner Multiplier [" + displayNums(upgradePPBCost)[0] + "]";
             window.localStorage.setItem("upgradePPBCost", "" + upgradePPBCost + "");
             pointGain = pointGain * 1.15;
             pointGain = Math.ceil(pointGain);
@@ -204,9 +219,25 @@
             upgradePPBCost = displayNums(upgradePPBCost)[1];
             document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[0] + "]";
             document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[0] + "]";
+            document.getElementById("upgradeCM").innerText = "Upgrade Corner Multiplier [" + displayNums(upgradePPBCost)[0] + "]";
             window.localStorage.setItem("upgradePPBCost", "" + upgradePPBCost + "");
             speed += 1;
             window.localStorage.setItem("speed","" + speed + "");
+        }
+    }
+    upgradeCM.onclick = function() {
+        if (points >= upgradePPBCost) {
+            points = points - upgradePPBCost;
+            upgradePPBCost = upgradePPBCost * 1.25;
+            upgradePPBCost = Math.round(upgradePPBCost);
+            upgradePPBCost = displayNums(upgradePPBCost)[1];
+            document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[0] + "]";
+            document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[0] + "]";
+            document.getElementById("upgradeCM").innerText = "Upgrade Corner Multiplier [" + displayNums(upgradePPBCost)[0] + "]";
+            window.localStorage.setItem("upgradePPBCost", "" + upgradePPBCost + "");
+            cornerMultiplier = cornerMultiplier * 1.05;
+            cornerMultiplier = Math.ceil(cornerMultiplier);
+            window.localStorage.setItem("cornerMultiplier","" + cornerMultiplier + "");
         }
     }
     //This function is for upgrade displays. It returns an array with [0] being the actual value
@@ -327,6 +358,18 @@
         if (directionTop === 1) {
             topAmount = topAmount - speed;
         }
+        if (topAmount > mostTop) {
+            topAmount = mostTop;
+        }
+        if (leftAmount > mostLeft) {
+            leftAmount = mostLeft;
+        }
+        if (topAmount < 0) {
+            topAmount = 0;
+        }
+        if (leftAmount < 0) {
+            leftAmount = 0;
+        }
         window.localStorage.setItem("leftAmount", "" + leftAmount + "");
         window.localStorage.setItem("topAmount", "" + topAmount + "");
         window.localStorage.setItem("directionLeft","" + directionLeft + "");
@@ -334,25 +377,22 @@
         document.getElementById("bounces").innerText = "Total Hits: " + displayStatNums(hits);
         if (cornerCheck >= 2) {
             cornerHits += 1;
-            cornerHitsSave = "" + cornerHits + "";
-            window.localStorage.setItem("cornerHits", cornerHitsSave);
+            window.localStorage.setItem("cornerHits", "" + cornerHits + "");
             hits += 1;
-            hitsSave = "" + hits + "";
-            window.localStorage.setItem("totalHits", hitsSave);
+            window.localStorage.setItem("totalHits", "" + hits + "");
             points += pointGain * cornerMultiplier
-            pointsSave = "" + points + "";
-            window.localStorage.setItem("points", pointsSave);
+            window.localStorage.setItem("points", "" + points + "");
         } else if (cornerCheck === 1) {
             hits += 1;
             hitsSave = "" + hits + "";
-            window.localStorage.setItem("totalHits", hitsSave);
+            window.localStorage.setItem("totalHits", "" + hits + "");
             points += pointGain;
-            pointsSave = "" + points + "";
-            window.localStorage.setItem("points", pointsSave);
+            window.localStorage.setItem("points", "" + points + "");
         }
         document.getElementById("cornerHits").innerText = "Corner Hits: " + displayStatNums(cornerHits);
         document.getElementById("pointsMessage").innerText = "Points: " + displayStatNums(points);
         document.getElementById("pointsPerHitMessage").innerText = "Points Per Hit: " + displayStatNums(pointGain);
+        document.getElementById("cornerMultiMessage").innerText = "Corner Multiplier: " + displayStatNums(cornerMultiplier);
         cornerCheck = 0;
         box.style.left = leftAmount + "px";
         box.style.top = topAmount + "px";
