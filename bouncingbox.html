@@ -32,7 +32,7 @@
         }
 
         #clickerBox {
-            height: 120px;
+            height: 150px;
             width: 400px;
             border-style: solid;
             border-width: 2px;
@@ -47,7 +47,7 @@
             width: 400px;
             border-style: solid;
             border-width: 2px;
-            top: 265px;
+            top: 295px;
             position: absolute;
             text-align: center;
             left: 0px;
@@ -88,10 +88,10 @@
 </head>
 
 <body>
-    <div id="box">
+    <div id="container">
 
     </div>
-    <div id="container">
+    <div id="box">
 
     </div>
     <div id="tracker">
@@ -102,6 +102,7 @@
         <p id="pointsMessage"> Points: 0 </p>
         <p id="pointsPerHitMessage"> Points Per Hit: 0 </p>
         <p id="cornerMultiMessage"> Corner Multiplier: 15 </p>
+        <p id="speedMessage"> Speed: 0 </p>
     </div>
     <div id="upgradeBox">
         <p id="upgradePointsPerBounce" class="noselect"> Upgrade Points Per Hit [75] </p>
@@ -111,6 +112,16 @@
     <div id="betBox">
         <p id="betBoxTitle"> <strong> Gambling </strong> </p>
         <p id="betMultiplier"> 1.00x </p>
+        <p id="bet100"> Bet 100% [0]</p>
+        <p id="bet75"> Bet 75% [0]</p>
+        <p id="bet50"> Bet 50% [0]</p>
+        <p id="bet40"> Bet 40% [0]</p>
+        <p id="bet30"> Bet 30% [0]</p>
+        <p id="bet25"> Bet 25% [0]</p>
+        <p id="bet20"> Bet 20% [0]</p>
+        <p id="bet15"> Bet 15% [0]</p>
+        <p id="bet10"> Bet 10% [0]</p>
+        <p id="bet5"> Bet 5% [0]</p>
     </div>
 </body>
 
@@ -168,6 +179,7 @@
         }
     }
     var box = document.getElementById("box");
+    box.addEventListener("click",boxClick);
     var container = document.getElementById("container");
     var tracker = document.getElementById("tracker");
     var infoLoc = container.offsetWidth + 300;
@@ -398,14 +410,16 @@
             betMultiplier = leftPercent;
         }
         betMultiplier = betMultiplier / 100;
-        betMultiplier = betMultiplier.toFixed(2);
         betMultiplier = betMultiplier * bettingAmt;
+        betMultiplier += 1;
+        betMultiplier = betMultiplier.toFixed(2);
         document.getElementById("betMultiplier").innerText = betMultiplier + "x"
         window.localStorage.setItem("leftAmount", "" + leftAmount + "");
         window.localStorage.setItem("topAmount", "" + topAmount + "");
         window.localStorage.setItem("directionLeft","" + directionLeft + "");
         window.localStorage.setItem("directionTop","" + directionTop + "");
         document.getElementById("bounces").innerText = "Total Hits: " + displayStatNums(hits);
+        document.getElementById("speedMessage").innerText = "Speed: " + displayStatNums(speed);
         if (cornerCheck >= 2) {
             cornerHits += 1;
             window.localStorage.setItem("cornerHits", "" + cornerHits + "");
@@ -427,5 +441,8 @@
         cornerCheck = 0;
         box.style.left = leftAmount + "px";
         box.style.top = topAmount + "px";
+    }
+    function boxClick() {
+        alert("sup");
     }
 </script>
