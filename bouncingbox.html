@@ -162,7 +162,7 @@
         var directionTop = JSON.parse(window.localStorage.getItem("directionTop"));
         var speed = JSON.parse(window.localStorage.getItem("speed"));
         var bettingAmt = JSON.parse(window.localStorage.getItem("bettingAmt"));
-        if (typeof bettingAmt === "undefined") {
+        if (bettingAmt == null) {
             bettingAmt = 1;
             window.localStorage.setItem("bettingAmt","1");
         }
@@ -366,19 +366,19 @@
         }
         if (directionLeft === 0) {
             leftAmount += speed;
-            leftPercent = 100 - leftAmount;
+            leftPercent = 100 - leftLocation;
         }
         if (directionTop === 0) {
             topAmount += speed;
-            topPercent = 100 - topAmount;
+            topPercent = 100 - topLocation;
         }
         if (directionLeft === 1) {
             leftAmount = leftAmount - speed;
-            leftPercent = leftAmount;
+            leftPercent = leftLocation;
         }
         if (directionTop === 1) {
             topAmount = topAmount - speed;
-            topPercent = topAmount;
+            topPercent = topLocation;
         }
         if (topAmount > mostTop) {
             topAmount = mostTop;
@@ -398,6 +398,8 @@
             betMultiplier = leftPercent;
         }
         betMultiplier = betMultiplier / 100;
+        betMultiplier = betMultiplier.toFixed(2);
+        betMultiplier = betMultiplier * bettingAmt;
         document.getElementById("betMultiplier").innerText = betMultiplier + "x"
         window.localStorage.setItem("leftAmount", "" + leftAmount + "");
         window.localStorage.setItem("topAmount", "" + topAmount + "");
