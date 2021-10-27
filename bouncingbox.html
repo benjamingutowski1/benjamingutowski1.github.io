@@ -69,6 +69,22 @@
         #betMultiplier {
             font-size: 20px;
         }
+        .betting {
+            line-height: 15px;
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                supported by Chrome and Opera */
+        }
         .noselect {
             -webkit-touch-callout: none;
             /* iOS Safari */
@@ -112,16 +128,16 @@
     <div id="betBox">
         <p id="betBoxTitle"> <strong> Gambling </strong> </p>
         <p id="betMultiplier"> 1.00x </p>
-        <p id="bet100"> Bet 100% [0]</p>
-        <p id="bet75"> Bet 75% [0]</p>
-        <p id="bet50"> Bet 50% [0]</p>
-        <p id="bet40"> Bet 40% [0]</p>
-        <p id="bet30"> Bet 30% [0]</p>
-        <p id="bet25"> Bet 25% [0]</p>
-        <p id="bet20"> Bet 20% [0]</p>
-        <p id="bet15"> Bet 15% [0]</p>
-        <p id="bet10"> Bet 10% [0]</p>
-        <p id="bet5"> Bet 5% [0]</p>
+        <p id="bet-100" class = "betting"> Bet 100% [0]</p>
+        <p id="bet-75" class = "betting"> Bet 75% [0]</p>
+        <p id="bet-50" class = "betting"> Bet 50% [0]</p>
+        <p id="bet-40" class = "betting"> Bet 40% [0]</p>
+        <p id="bet-30" class = "betting"> Bet 30% [0]</p>
+        <p id="bet-25" class = "betting"> Bet 25% [0]</p>
+        <p id="bet-20" class = "betting"> Bet 20% [0]</p>
+        <p id="bet-15" class = "betting"> Bet 15% [0]</p>
+        <p id="bet-10" class = "betting"> Bet 10% [0]</p>
+        <p id="bet-5" class = "betting"> Bet 5% [0]</p>
     </div>
 </body>
 
@@ -219,6 +235,7 @@
     var betMultiplier = 0;
     var topPercent = 0;
     var leftPercent = 0;
+    var bettingList = [];
     //vars to set upgrade item clicks
     var upgradePointsPerHit = document.getElementById("upgradePointsPerBounce");
     var upgradeSpeed = document.getElementById("upgradeSpeed");
@@ -441,8 +458,32 @@
         cornerCheck = 0;
         box.style.left = leftAmount + "px";
         box.style.top = topAmount + "px";
+        updateBetValues();
     }
     function boxClick() {
         alert("sup");
+    }
+    function updateBetValues() {
+        var betBoxChildren = document.getElementById("betBox").children;
+        var bettingChildren = [1,1,1,1,1,1,1,1,1,1];
+        var bettingIndex = 0;
+        var currentId = 0;
+        var currentIdId = 0;
+        var currentPercent = 0;
+        var currentBox = 0;
+        for (var i = 0; i < betBoxChildren.length; i++) {
+            currentBox = betBoxChildren[i];
+            if (currentBox.className === "betting") {
+                currentId = currentBox.id;
+                currentId = parseInt(currentId.split("-")[1],10);
+                currentPercent = currentId;
+                currentId = currentId / 100;
+                currentId = points * currentId;
+                currentId = currentId.ceil(1);
+                document.getElementById(currentBox.id).innerText = "Bet " + currentPercent + "% [" + currentId + "]";
+                bettingList[currentIdId] = currentId;
+                currentIdId += 1;
+            }
+        }
     }
 </script>
