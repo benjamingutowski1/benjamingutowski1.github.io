@@ -479,8 +479,9 @@
                 currentPercent = currentId;
                 currentId = currentId / 100;
                 currentId = points * currentId;
-                currentId = currentId.ceil(1);
-                document.getElementById(currentBox.id).innerText = "Bet " + currentPercent + "% [" + currentId + "]";
+                currentId = Math.ceil(currentId);
+                currentId = displayNums(currentId)[0]
+                document.getElementById(currentBox.id).innerText = "Bet " + currentPercent + "% [" + displayNums(currentId)[1] + "]";
                 bettingList[currentIdId] = currentId;
                 currentIdId += 1;
             }
