@@ -52,6 +52,7 @@
             text-align: center;
             left: 0px;
         }
+
         #betBox {
             height: 500px;
             width: 260px;
@@ -62,13 +63,16 @@
             left: 0px;
             position: absolute;
         }
+
         #betBoxTitle {
             font-size: 25px;
             line-height: 3px;
         }
+
         #betMultiplier {
             font-size: 20px;
         }
+
         .betting {
             line-height: 15px;
             -webkit-touch-callout: none;
@@ -85,6 +89,7 @@
             /* Non-prefixed version, currently
                 supported by Chrome and Opera */
         }
+
         .noselect {
             -webkit-touch-callout: none;
             /* iOS Safari */
@@ -122,22 +127,22 @@
     </div>
     <div id="upgradeBox">
         <p id="upgradePointsPerBounce" class="noselect"> Upgrade Points Per Hit [75] </p>
-        <p id = "upgradeSpeed" class = "noselect"> Upgrade Speed [75] </p>
-        <p id = "upgradeCM" class = "noselect"> Upgrade Corner Multiplier [75] </p>
+        <p id="upgradeSpeed" class="noselect"> Upgrade Speed [75] </p>
+        <p id="upgradeCM" class="noselect"> Upgrade Corner Multiplier [75] </p>
     </div>
     <div id="betBox">
         <p id="betBoxTitle"> <strong> Gambling </strong> </p>
         <p id="betMultiplier"> 1.00x </p>
-        <p id="bet-100" class = "betting"> Bet 100% [0]</p>
-        <p id="bet-75" class = "betting"> Bet 75% [0]</p>
-        <p id="bet-50" class = "betting"> Bet 50% [0]</p>
-        <p id="bet-40" class = "betting"> Bet 40% [0]</p>
-        <p id="bet-30" class = "betting"> Bet 30% [0]</p>
-        <p id="bet-25" class = "betting"> Bet 25% [0]</p>
-        <p id="bet-20" class = "betting"> Bet 20% [0]</p>
-        <p id="bet-15" class = "betting"> Bet 15% [0]</p>
-        <p id="bet-10" class = "betting"> Bet 10% [0]</p>
-        <p id="bet-5" class = "betting"> Bet 5% [0]</p>
+        <p id="bet-100" class="betting"> Bet 100% [0]</p>
+        <p id="bet-75" class="betting"> Bet 75% [0]</p>
+        <p id="bet-50" class="betting"> Bet 50% [0]</p>
+        <p id="bet-40" class="betting"> Bet 40% [0]</p>
+        <p id="bet-30" class="betting"> Bet 30% [0]</p>
+        <p id="bet-25" class="betting"> Bet 25% [0]</p>
+        <p id="bet-20" class="betting"> Bet 20% [0]</p>
+        <p id="bet-15" class="betting"> Bet 15% [0]</p>
+        <p id="bet-10" class="betting"> Bet 10% [0]</p>
+        <p id="bet-5" class="betting"> Bet 5% [0]</p>
     </div>
 </body>
 
@@ -167,13 +172,13 @@
         var topAmount = 100;
         window.localStorage.setItem("topAmount", "100");
         var directionLeft = 0;
-        window.localStorage.setItem("directionLeft","0");
+        window.localStorage.setItem("directionLeft", "0");
         var directionTop = 0;
-        window.localStorage.setItem("directionTop","0");
+        window.localStorage.setItem("directionTop", "0");
         var speed = 1;
-        window.localStorage.setItem("speed","1");
+        window.localStorage.setItem("speed", "1");
         var bettingAmt = 1;
-        window.localStorage.setItem("bettingAmt","1");
+        window.localStorage.setItem("bettingAmt", "1");
     } else {
         //This code runs on every other join except the first one or after an update/forced clear.
         var points = JSON.parse(window.localStorage.getItem("points"));
@@ -191,11 +196,11 @@
         var bettingAmt = JSON.parse(window.localStorage.getItem("bettingAmt"));
         if (bettingAmt == null) {
             bettingAmt = 1;
-            window.localStorage.setItem("bettingAmt","1");
+            window.localStorage.setItem("bettingAmt", "1");
         }
     }
     var box = document.getElementById("box");
-    box.addEventListener("click",boxClick);
+    box.addEventListener("click", boxClick);
     var container = document.getElementById("container");
     var tracker = document.getElementById("tracker");
     var infoLoc = container.offsetWidth + 300;
@@ -209,23 +214,11 @@
     upgradeBox.style.left = infoLoc + "px";
     tracker.style.left = infoLoc + "px";
     clickerBox.style.left = infoLoc + "px";
-    var checkpoint = 0;
-    var currentAbbreviation = 0;
-    var remainderCheck = 0;
-    var remainderLength = 0;
-    var wholeNum = 0;
     //abbreviations lists and specifics; current number of zeros: 12
-    var abbreviations = ["m","b","t"];
-    var abbreviationNums = [1000000,1000000000,1000000000000];
+    var abbreviations = ["m", "b", "t"];
+    var abbreviationNums = [1000000, 1000000000, 1000000000000];
     //end of that
-    var abbrDecimals = 0;
-    var abbrRound = 0;
-    var abbrRemCheck = 0;
-    var abbrDecimalPlaces = 0;
-    var abbrDeciCheck = 0;
-    var displayNumber = 0;
-    var startingNumber = 1086000;
-    var finalNumber = "couldn't process";
+    var startingNumber = 0;
     var abbreviationsLength = abbreviations.length - 1;
     var topLocation = 0;
     var leftLocation = 0;
@@ -240,56 +233,68 @@
     var upgradePointsPerHit = document.getElementById("upgradePointsPerBounce");
     var upgradeSpeed = document.getElementById("upgradeSpeed");
     var upgradeCM = document.getElementById("upgradeCM");
-    document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[0] + "]";
-    document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[0] + "]";
-    document.getElementById("upgradeCM").innerText = "Upgrade Corner Multiplier [" + displayNums(upgradePPBCost)[0] + "]";
-    upgradePointsPerHit.onclick = function() {
+    document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[1] + "]";
+    document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[1] + "]";
+    document.getElementById("upgradeCM").innerText = "Upgrade Corner Multiplier [" + displayNums(upgradePPBCost)[1] + "]";
+    upgradePointsPerHit.onclick = function () {
         if (points >= upgradePPBCost) {
             points = points - upgradePPBCost;
             upgradePPBCost = upgradePPBCost * 1.25;
             upgradePPBCost = Math.round(upgradePPBCost);
-            upgradePPBCost = displayNums(upgradePPBCost)[1];
-            document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[0] + "]";
-            document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[0] + "]";
-            document.getElementById("upgradeCM").innerText = "Upgrade Corner Multiplier [" + displayNums(upgradePPBCost)[0] + "]";
+            upgradePPBCost = displayNums(upgradePPBCost)[0];
+            document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[1] + "]";
+            document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[1] + "]";
+            document.getElementById("upgradeCM").innerText = "Upgrade Corner Multiplier [" + displayNums(upgradePPBCost)[1] + "]";
             window.localStorage.setItem("upgradePPBCost", "" + upgradePPBCost + "");
             pointGain = pointGain * 1.15;
             pointGain = Math.ceil(pointGain);
-            window.localStorage.setItem("pointGain","" + pointGain + "");
+            window.localStorage.setItem("pointGain", "" + pointGain + "");
         }
     }
-    upgradeSpeed.onclick = function() {
+    upgradeSpeed.onclick = function () {
         if (points >= upgradePPBCost) {
             points = points - upgradePPBCost;
             upgradePPBCost = upgradePPBCost * 1.25;
             upgradePPBCost = Math.round(upgradePPBCost);
-            upgradePPBCost = displayNums(upgradePPBCost)[1];
-            document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[0] + "]";
-            document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[0] + "]";
-            document.getElementById("upgradeCM").innerText = "Upgrade Corner Multiplier [" + displayNums(upgradePPBCost)[0] + "]";
+            upgradePPBCost = displayNums(upgradePPBCost)[0];
+            document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[1] + "]";
+            document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[1] + "]";
+            document.getElementById("upgradeCM").innerText = "Upgrade Corner Multiplier [" + displayNums(upgradePPBCost)[1] + "]";
             window.localStorage.setItem("upgradePPBCost", "" + upgradePPBCost + "");
             speed += 1;
-            window.localStorage.setItem("speed","" + speed + "");
+            window.localStorage.setItem("speed", "" + speed + "");
         }
     }
-    upgradeCM.onclick = function() {
+    upgradeCM.onclick = function () {
         if (points >= upgradePPBCost) {
             points = points - upgradePPBCost;
             upgradePPBCost = upgradePPBCost * 1.25;
             upgradePPBCost = Math.round(upgradePPBCost);
-            upgradePPBCost = displayNums(upgradePPBCost)[1];
-            document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[0] + "]";
-            document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[0] + "]";
-            document.getElementById("upgradeCM").innerText = "Upgrade Corner Multiplier [" + displayNums(upgradePPBCost)[0] + "]";
+            upgradePPBCost = displayNums(upgradePPBCost)[0];
+            document.getElementById("upgradePointsPerBounce").innerText = "Upgrade Points Per Hit [" + displayNums(upgradePPBCost)[1] + "]";
+            document.getElementById("upgradeSpeed").innerText = "Upgrade Speed [" + displayNums(upgradePPBCost)[1] + "]";
+            document.getElementById("upgradeCM").innerText = "Upgrade Corner Multiplier [" + displayNums(upgradePPBCost)[1] + "]";
             window.localStorage.setItem("upgradePPBCost", "" + upgradePPBCost + "");
             cornerMultiplier = cornerMultiplier * 1.05;
             cornerMultiplier = Math.ceil(cornerMultiplier);
-            window.localStorage.setItem("cornerMultiplier","" + cornerMultiplier + "");
+            window.localStorage.setItem("cornerMultiplier", "" + cornerMultiplier + "");
         }
     }
     //This function is for upgrade displays. It returns an array with [0] being the actual value
     //and [1] being the display of that value.
     function displayNums(startingNumber) {
+        var abbrDecimals = 0;
+        var checkpoint = 0;
+        var currentAbbreviation = 0;
+        var remainderCheck = 0;
+        var remainderLength = 0;
+        var wholeNum = 0;
+        var abbrRound = 0;
+        var abbrRemCheck = 0;
+        var abbrDecimalPlaces = 0;
+        var abbrDeciCheck = 0;
+        var displayNumber = 0;
+        var finalNumber = "couldn't process";
         for (var i = 0; i <= abbreviationsLength; i++) {
             if (startingNumber >= abbreviationNums[i]) {
                 checkpoint = abbreviationNums[i];
@@ -324,6 +329,8 @@
             }
             else {
                 abbrDecimals = parseInt(abbrDecimals, 10) / Math.pow(10, abbrDecimalPlaces);
+                abbrDecimals = abbrDecimals.toFixed(abbrDecimalPlaces);
+                abbrDecimals = parseFloat(abbrDecimals);
                 wholeNum = parseInt(wholeNum, 10);
                 wholeNum = wholeNum + abbrDecimals;
 
@@ -335,6 +342,18 @@
     }
     //This function is for stats, such as points. Returns the number in the form: 1.50m
     function displayStatNums(startingNumber) {
+        var abbrDecimals = 0;
+        var abbrRound = 0;
+        var abbrRemCheck = 0;
+        var abbrDecimalPlaces = 0;
+        var abbrDeciCheck = 0;
+        var displayNumber = 0;
+        var checkpoint = 0;
+        var currentAbbreviation = 0;
+        var remainderCheck = 0;
+        var remainderLength = 0;
+        var wholeNum = 0;
+        var finalNumber = "couldn't process";
         for (var i = 0; i <= abbreviationsLength; i++) {
             if (startingNumber >= abbreviationNums[i]) {
                 checkpoint = abbreviationNums[i];
@@ -350,7 +369,7 @@
             wholeNum = remainderLength[0];
             abbrDecimalPlaces = wholeNum.split("");
             abbrDecimalPlaces = 3 - abbrDecimalPlaces.length;
-            remainderLength = remainderLength[1];
+            remainderLength = "" + remainderLength[1] + "";
             remainderLength = remainderLength.split("");
             abbrDecimals = "";
             for (var i = 0; i < abbrDecimalPlaces; i++) {
@@ -361,6 +380,8 @@
             }
             else {
                 abbrDecimals = parseInt(abbrDecimals, 10) / Math.pow(10, abbrDecimalPlaces);
+                abbrDecimals = abbrDecimals.toFixed(abbrDecimalPlaces);
+                abbrDecimals = parseFloat(abbrDecimals);
                 wholeNum = parseInt(wholeNum, 10);
                 wholeNum = wholeNum + abbrDecimals;
 
@@ -433,8 +454,8 @@
         document.getElementById("betMultiplier").innerText = betMultiplier + "x"
         window.localStorage.setItem("leftAmount", "" + leftAmount + "");
         window.localStorage.setItem("topAmount", "" + topAmount + "");
-        window.localStorage.setItem("directionLeft","" + directionLeft + "");
-        window.localStorage.setItem("directionTop","" + directionTop + "");
+        window.localStorage.setItem("directionLeft", "" + directionLeft + "");
+        window.localStorage.setItem("directionTop", "" + directionTop + "");
         document.getElementById("bounces").innerText = "Total Hits: " + displayStatNums(hits);
         document.getElementById("speedMessage").innerText = "Speed: " + displayStatNums(speed);
         if (cornerCheck >= 2) {
@@ -448,7 +469,7 @@
             hits += 1;
             hitsSave = "" + hits + "";
             window.localStorage.setItem("totalHits", "" + hits + "");
-            points += pointGain;
+            points += 100000;
             window.localStorage.setItem("points", "" + points + "");
         }
         document.getElementById("cornerHits").innerText = "Corner Hits: " + displayStatNums(cornerHits);
@@ -465,7 +486,7 @@
     }
     function updateBetValues() {
         var betBoxChildren = document.getElementById("betBox").children;
-        var bettingChildren = [1,1,1,1,1,1,1,1,1,1];
+        var bettingChildren = [1, 1, 1, 1, 1, 1, 1, 1, 1, 1];
         var bettingIndex = 0;
         var currentId = 0;
         var currentIdId = 0;
@@ -475,7 +496,7 @@
             currentBox = betBoxChildren[i];
             if (currentBox.className === "betting") {
                 currentId = currentBox.id;
-                currentId = parseInt(currentId.split("-")[1],10);
+                currentId = parseInt(currentId.split("-")[1], 10);
                 currentPercent = currentId;
                 currentId = currentId / 100;
                 currentId = points * currentId;
