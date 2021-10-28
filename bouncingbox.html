@@ -469,7 +469,7 @@
             hits += 1;
             hitsSave = "" + hits + "";
             window.localStorage.setItem("totalHits", "" + hits + "");
-            points += 100000;
+            points += pointGain;
             window.localStorage.setItem("points", "" + points + "");
         }
         document.getElementById("cornerHits").innerText = "Corner Hits: " + displayStatNums(cornerHits);
