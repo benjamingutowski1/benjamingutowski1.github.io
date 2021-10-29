@@ -326,6 +326,7 @@
             }
             if (abbrDecimalPlaces <= 0) {
                 wholeNum = parseInt(wholeNum, 10);
+                displayNumber = wholeNum;
             }
             else {
                 abbrDecimals = parseInt(abbrDecimals, 10) / Math.pow(10, abbrDecimalPlaces);
@@ -333,10 +334,10 @@
                 abbrDecimals = parseFloat(abbrDecimals);
                 wholeNum = parseInt(wholeNum, 10);
                 wholeNum = wholeNum + abbrDecimals;
-
+                displayNumber = wholeNum.toFixed(abbrDecimalPlaces);
             }
             finalNumber = wholeNum * checkpoint;
-            displayNumber = wholeNum + currentAbbreviation;
+            displayNumber = displayNumber + currentAbbreviation;
         }
         return ([finalNumber, displayNumber]);
     }
@@ -377,6 +378,7 @@
             }
             if (abbrDecimalPlaces <= 0) {
                 wholeNum = parseInt(wholeNum, 10);
+                displayNumber = wholeNum;
             }
             else {
                 abbrDecimals = parseInt(abbrDecimals, 10) / Math.pow(10, abbrDecimalPlaces);
@@ -384,9 +386,9 @@
                 abbrDecimals = parseFloat(abbrDecimals);
                 wholeNum = parseInt(wholeNum, 10);
                 wholeNum = wholeNum + abbrDecimals;
-
+                displayNumber = wholeNum.toFixed(abbrDecimalPlaces);
             }
-            displayNumber = wholeNum + currentAbbreviation;
+            displayNumber = displayNumber + currentAbbreviation;
         }
         return (displayNumber);
     }
