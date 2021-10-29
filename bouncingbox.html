@@ -214,6 +214,7 @@
     upgradeBox.style.left = infoLoc + "px";
     tracker.style.left = infoLoc + "px";
     clickerBox.style.left = infoLoc + "px";
+    var bettingClass = document.getElementsByClassName("betting");
     //abbreviations lists and specifics; current number of zeros: 12
     var abbreviations = ["m", "b", "t"];
     var abbreviationNums = [1000000, 1000000000, 1000000000000];
@@ -229,6 +230,7 @@
     var topPercent = 0;
     var leftPercent = 0;
     var bettingList = [];
+    var bettingListIds = [];
     //vars to set upgrade item clicks
     var upgradePointsPerHit = document.getElementById("upgradePointsPerBounce");
     var upgradeSpeed = document.getElementById("upgradeSpeed");
@@ -337,6 +339,7 @@
                 displayNumber = wholeNum.toFixed(abbrDecimalPlaces);
             }
             finalNumber = wholeNum * checkpoint;
+            finalNumber = Math.round(finalNumber);
             displayNumber = displayNumber + currentAbbreviation;
         }
         return ([finalNumber, displayNumber]);
@@ -494,9 +497,11 @@
         var currentIdId = 0;
         var currentPercent = 0;
         var currentBox = 0;
+        var currentActualId = 0;
         for (var i = 0; i < betBoxChildren.length; i++) {
             currentBox = betBoxChildren[i];
             if (currentBox.className === "betting") {
+                currentActualId = currentBox.id;
                 currentId = currentBox.id;
                 currentId = parseInt(currentId.split("-")[1], 10);
                 currentPercent = currentId;
@@ -505,8 +510,22 @@
                 currentId = Math.ceil(currentId);
                 document.getElementById(currentBox.id).innerText = "Bet " + currentPercent + "% [" + displayStatNums(currentId) + "]";
                 bettingList[currentIdId] = currentId;
+                bettingListIds[currentIdId] = currentActualId;
                 currentIdId += 1;
             }
         }
+    }
+    document.getElementById("bet-100").addEventListener("click", placeBets("bet-100"));
+    document.getElementById("bet-75").addEventListener("click", placeBets("bet-75"));
+    document.getElementById("bet-50").addEventListener("click", placeBets("bet-50"));
+    document.getElementById("bet-40").addEventListener("click", placeBets("bet-40"));
+    document.getElementById("bet-30").onclick = placeBets("bet-30");
+    document.getElementById("bet-25").onclick = placeBets("bet-25");
+    document.getElementById("bet-20").onclick = placeBets("bet-20");
+    document.getElementById("bet-15").onclick = placeBets("bet-15");
+    document.getElementById("bet-10").onclick = placeBets("bet-10");
+    document.getElementById("bet-5").onclick = placeBets("bet-5");
+    function placeBets(elementId) {
+        console.log("Element Id: " + elementId);
     }
 </script>
