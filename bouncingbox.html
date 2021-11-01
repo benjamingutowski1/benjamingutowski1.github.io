@@ -143,6 +143,8 @@
         <p id="bet-15" class="betting"> Bet 15% [0]</p>
         <p id="bet-10" class="betting"> Bet 10% [0]</p>
         <p id="bet-5" class="betting"> Bet 5% [0]</p>
+        <p id="currentBet"> Current Bet: 0 </p>
+        <p id="currentMultiplier"> Current Multiplier: 0x </p>
     </div>
 </body>
 
@@ -177,8 +179,13 @@
         window.localStorage.setItem("directionTop", "0");
         var speed = 1;
         window.localStorage.setItem("speed", "1");
+        //bettingAmt is the max multiplier you can have. The multiplier ranges from this to one.
         var bettingAmt = 1;
         window.localStorage.setItem("bettingAmt", "1");
+        var currentBet = 0;
+        window.localStorage.setItem("currentBet", "0");
+        var currentMultiplier = 0;
+        window.localStorage.setItem("currentMultiplier", "0");
     } else {
         //This code runs on every other join except the first one or after an update/forced clear.
         var points = JSON.parse(window.localStorage.getItem("points"));
@@ -197,6 +204,16 @@
         if (bettingAmt == null) {
             bettingAmt = 1;
             window.localStorage.setItem("bettingAmt", "1");
+        }
+        var currentBet = JSON.parse(window.localStorage.getItem("currentBet"));
+        if (currentBet == null) {
+            currentBet = 0;
+            window.localStorage.setItem("currentBet", "0");
+        }
+        var currentMultiplier = JSON.parse(window.localStorage.getItem("currentMultiplier"));
+        if (currentMultiplier == null) {
+            currentMultiplier = 0;
+            window.localStorage.setItem("currentMultiplier", "0");
         }
     }
     var box = document.getElementById("box");
@@ -469,18 +486,26 @@
             hits += 1;
             window.localStorage.setItem("totalHits", "" + hits + "");
             points += pointGain * cornerMultiplier
-            window.localStorage.setItem("points", "" + points + "");
+            window.localStorage.setItem("points", "" + points + ""); 
         } else if (cornerCheck === 1) {
             hits += 1;
             hitsSave = "" + hits + "";
             window.localStorage.setItem("totalHits", "" + hits + "");
             points += pointGain;
             window.localStorage.setItem("points", "" + points + "");
+            if (currentBet > 0) {
+                currentBet = 0;
+                window.localStorage.setItem("currentBet","0");
+                currentMultiplier = 0;
+                window.localStorage.setItem("currentMultiplier","0");
+            }
         }
         document.getElementById("cornerHits").innerText = "Corner Hits: " + displayStatNums(cornerHits);
         document.getElementById("pointsMessage").innerText = "Points: " + displayStatNums(points);
         document.getElementById("pointsPerHitMessage").innerText = "Points Per Hit: " + displayStatNums(pointGain);
         document.getElementById("cornerMultiMessage").innerText = "Corner Multiplier: " + displayStatNums(cornerMultiplier);
+        document.getElementById("currentBet").innerText = "Current Bet: " + currentBet;
+        document.getElementById("currentMultiplier").innerText = "Current Multiplier: " + currentMultiplier + "x"; 
         cornerCheck = 0;
         box.style.left = leftAmount + "px";
         box.style.top = topAmount + "px";
@@ -515,17 +540,46 @@
             }
         }
     }
-    document.getElementById("bet-100").addEventListener("click", placeBets("bet-100"));
-    document.getElementById("bet-75").addEventListener("click", placeBets("bet-75"));
-    document.getElementById("bet-50").addEventListener("click", placeBets("bet-50"));
-    document.getElementById("bet-40").addEventListener("click", placeBets("bet-40"));
-    document.getElementById("bet-30").onclick = placeBets("bet-30");
-    document.getElementById("bet-25").onclick = placeBets("bet-25");
-    document.getElementById("bet-20").onclick = placeBets("bet-20");
-    document.getElementById("bet-15").onclick = placeBets("bet-15");
-    document.getElementById("bet-10").onclick = placeBets("bet-10");
-    document.getElementById("bet-5").onclick = placeBets("bet-5");
+    document.getElementById("bet-100").onclick = function () {
+        placeBets("bet-100");
+    }
+    document.getElementById("bet-75").onclick = function () {
+        placeBets("bet-75");
+    }
+    document.getElementById("bet-50").onclick = function () {
+        placeBets("bet-50");
+    }
+    document.getElementById("bet-40").onclick = function () {
+        placeBets("bet-40");
+    }
+    document.getElementById("bet-30").onclick = function () {
+        placeBets("bet-30");
+    }
+    document.getElementById("bet-25").onclick = function () {
+        placeBets("bet-25");
+    }
+    document.getElementById("bet-20").onclick = function () {
+        placeBets("bet-20");
+    }
+    document.getElementById("bet-15").onclick = function () {
+        placeBets("bet-15");
+    }
+    document.getElementById("bet-10").onclick = function () {
+        placeBets("bet-10");
+    }
+    document.getElementById("bet-5").onclick = function () {
+        placeBets("bet-5");
+    }
     function placeBets(elementId) {
-        console.log("Element Id: " + elementId);
+        var bettingIndex = bettingListIds.indexOf(elementId);
+        var bettingAmount = bettingList[bettingIndex];
+        if (currentBet === 0) {
+            currentBet = bettingAmount;
+            window.localStorage.setItem("currentBet", "" + currentBet + "");
+            currentMultiplier = betMultiplier;
+            window.localStorage.setItem("currentMultiplier", "" + currentMultiplier + "");
+            points = points - currentBet;
+            window.localStorage.setItem("points","" + points + "");
+        }
     }
 </script>
