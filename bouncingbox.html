@@ -326,11 +326,14 @@
         } else {
             remainderCheck = startingNumber / checkpoint;
             remainderLength = remainderCheck.toString();
+            if (remainderLength.includes(".") === false) {
+                remainderLength = remainderLength + ".00000";
+            }
             remainderLength = remainderLength.split(".");
             wholeNum = remainderLength[0];
             abbrDecimalPlaces = wholeNum.split("");
             abbrDecimalPlaces = 3 - abbrDecimalPlaces.length;
-            remainderLength = remainderLength[1];
+            remainderLength = "" + remainderLength[1]; + "";
             remainderLength = remainderLength.split("");
             abbrRemCheck = parseInt(remainderLength[abbrDecimalPlaces], 10);
             if (abbrRemCheck >= 5) {
@@ -486,7 +489,17 @@
             hits += 1;
             window.localStorage.setItem("totalHits", "" + hits + "");
             points += pointGain * cornerMultiplier
-            window.localStorage.setItem("points", "" + points + ""); 
+            window.localStorage.setItem("points", "" + points + "");
+            if (currentBet > 0) {
+                currentBet = currentBet * currentMultiplier;
+                currentBet = Math.ceil(currentBet);
+                points = points + currentBet;
+                window.localStorage.setItem("points","" + points + "");
+                currentBet = 0;
+                window.localStorage.setItem("currentBet","0");
+                currentMultiplier = 0;
+                window.localStorage.setItem("currentMultiplier","0");
+            } 
         } else if (cornerCheck === 1) {
             hits += 1;
             hitsSave = "" + hits + "";
@@ -504,7 +517,7 @@
         document.getElementById("pointsMessage").innerText = "Points: " + displayStatNums(points);
         document.getElementById("pointsPerHitMessage").innerText = "Points Per Hit: " + displayStatNums(pointGain);
         document.getElementById("cornerMultiMessage").innerText = "Corner Multiplier: " + displayStatNums(cornerMultiplier);
-        document.getElementById("currentBet").innerText = "Current Bet: " + currentBet;
+        document.getElementById("currentBet").innerText = "Current Bet: " + displayStatNums(currentBet);
         document.getElementById("currentMultiplier").innerText = "Current Multiplier: " + currentMultiplier + "x"; 
         cornerCheck = 0;
         box.style.left = leftAmount + "px";
