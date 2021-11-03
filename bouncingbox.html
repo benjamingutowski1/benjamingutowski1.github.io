@@ -72,7 +72,25 @@
         #betMultiplier {
             font-size: 20px;
         }
-
+        #prestige1 {
+            height: 200px;
+            width: 750px;
+            position: absolute;
+            top: 0px;
+            left: 5px;
+            border-style: solid;
+            border-width: 2px;
+        }
+        #prestigePPBCost {
+            height: 192px;
+            width: 186px;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            border-style: solid;
+            border-width: 2px;
+            text-align: center;
+        }
         .betting {
             line-height: 15px;
             -webkit-touch-callout: none;
@@ -145,6 +163,11 @@
         <p id="bet-5" class="betting"> Bet 5% [0]</p>
         <p id="currentBet"> Current Bet: 0 </p>
         <p id="currentMultiplier"> Current Multiplier: 0x </p>
+    </div>
+    <div id = "prestige1">
+        <div id = "prestigePPBCost">
+            Prestige
+        </div>
     </div>
 </body>
 
@@ -223,10 +246,15 @@
     var infoLoc = container.offsetWidth + 300;
     var infoLocHeight = container.offsetHeight + 20;
     var infoLoc2 = container.offsetWidth + 20;
+    var infoLoc3 = container.offsetHeight + 20;
     var infoLocMessageWidth = container.offsetWidth - 10;
     var clickerBox = document.getElementById("clickerBox");
     var upgradeBox = document.getElementById("upgradeBox");
     var betBox = document.getElementById("betBox");
+    var prestige1Box = document.getElementById("prestige1");
+    prestige1Box.style.width = container.style.width;
+    prestige1Box.style.top = infoLoc3 + "px";
+    var prestigePPB = document.getElementById("prestigePPBCost");
     betBox.style.left = infoLoc2 + "px";
     upgradeBox.style.left = infoLoc + "px";
     tracker.style.left = infoLoc + "px";
