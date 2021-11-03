@@ -152,7 +152,7 @@
 <script>
     //updateCheck should only be raised, it should never go down. Whenever you want to clear everyone's progress and get rid of their cookies, set it higher by 1.
     //ex: if it was "updateCheck=1", set the new one to "updateCheck=2"
-    var updateCheck = 0.0032;
+    var updateCheck = 0.1;
     if (JSON.parse(window.localStorage.getItem("updateCheck")) != updateCheck) {
         //This code runs on the first time loading a website or after an update (forced progress/cookies clear)
         var stringUpdateCheck = "" + updateCheck + "";
