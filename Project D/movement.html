@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <style>
+        #HTML-player {
+            width: 10px;
+            height: 10px;
+            border-style: solid;
+            border-width: 1px;
+            background-color: blue;
+            position: absolute;
+            z-index: 1;
+        }
+        #HTML-field {
+            height: 500px;
+            width: 500px;
+            border-style: solid;
+            border-width: 2px;
+            background-color: limegreen;
+            position: absolute;
+        }
+    </style>
+
+</head>
+
+<body>
+    <div id = "HTML-player"> </div>
+    <div id = "HTML-field"> </div>
+    
+    <script>
+        var player = document.getElementById("HTML-player");
+        var field = document.getElementById("HTML-field");
+        var fieldMoveTop = window.innerHeight / 2 - 250;
+        var fieldMoveLeft = window.innerWidth / 2 - 250;
+        var playerMoveTop = window.innerHeight / 2 - 5;
+        var playerMoveLeft = window.innerWidth / 2 - 5;
+        field.style.left = fieldMoveLeft + "px";
+        field.style.top = fieldMoveTop + "px";
+        player.style.left = playerMoveLeft + "px";
+        player.style.top = playerMoveTop + "px";
+    </script>
+</body>
+
+</html>
