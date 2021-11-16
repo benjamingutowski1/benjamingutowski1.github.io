@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+</head>
+<body>
+  <h1 id = "bananaMsg"> You weigh 0 bananas. </h1>
+  <script>
+    var weight = prompt("How much do you weigh?","150");
+    weight = parseInt(weight, 10);
+    var inBananas = weight / 1.04;
+    inBananas = Math.ceil(inBananas);
+    document.getElementById("bananaMsg").innerText = "You weigh " + inBananas + " bananas."
+  </script>
+</body>
+</html>

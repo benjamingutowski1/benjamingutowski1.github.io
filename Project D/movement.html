@@ -4,14 +4,15 @@
 <head>
     <style>
         #HTML-player {
-            width: 10px;
-            height: 10px;
-            border-style: solid;
-            border-width: 1px;
-            background-color: blue;
             position: absolute;
             z-index: 1;
+            width: 0;
+            height: 0;
+            border-left: 8px solid transparent;
+            border-right: 8px solid transparent;
+            border-bottom: 16px solid blue;
         }
+
         #HTML-field {
             height: 500px;
             width: 500px;
@@ -25,16 +26,18 @@
 </head>
 
 <body>
-    <div id = "HTML-player"> </div>
-    <div id = "HTML-field"> </div>
-    
+    <div id="HTML-player"> </div>
+    <div id="HTML-field"> </div>
+
     <script>
         var player = document.getElementById("HTML-player");
         var field = document.getElementById("HTML-field");
         var fieldMoveTop = window.innerHeight / 2 - 250;
         var fieldMoveLeft = window.innerWidth / 2 - 250;
-        var playerMoveTop = window.innerHeight / 2 - 5;
-        var playerMoveLeft = window.innerWidth / 2 - 5;
+        var playerMoveTop = window.innerHeight / 2 - 8;
+        var playerMoveLeft = window.innerWidth / 2 - 8;
+        var playerCenterLeft = playerMoveLeft - 8;
+        playerCenterTop = playerMoveTop - 8;
         field.style.left = fieldMoveLeft + "px";
         field.style.top = fieldMoveTop + "px";
         player.style.left = playerMoveLeft + "px";
