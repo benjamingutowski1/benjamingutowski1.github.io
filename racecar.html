@@ -32,11 +32,6 @@
             /* Non-prefixed version, currently
                 supported by Chrome and Opera */
         }
-
-        #repeats {
-            position: absolute;
-            top: 500px;
-        }
     </style>
 </head>
 
@@ -46,7 +41,6 @@
     <img id="car2"
         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjHmC3n7CBQtNC82OP5qArmbFDa0-HhO6HlQ&usqp=CAU">
     <h1 id="timer"> Start Game </h1>
-    <h2 id="repeats"> repeats </h2>
 </body>
 
 </html>
@@ -59,13 +53,17 @@
     var car2Momentum = 1;
     var winner = 0;
     var started = 0;
-    var repeats = 1;
+    var repeats = 0;
     var countdown = 0;
+    var countdownStarted = 0;
     document.getElementById("timer").onclick = function () {
         if (started === 0) {
-            document.getElementById("timer").innerText = "5.00";
-            repeats = 500;
-            countdown = setInterval(count, 10);
+            if (countdownStarted === 0) {
+                countdownStarted = 1;
+                document.getElementById("timer").innerText = "5.00";
+                repeats = 0;
+                countdown = setInterval(count, 10);
+            }
         }
     }
     function count() {
@@ -73,14 +71,13 @@
         currentNum = parseFloat(currentNum);
         currentNum = currentNum - 0.01;
         document.getElementById("timer").innerText = "" + currentNum.toFixed(2) + "";
-        repeats = repeats - 1;
-        document.getElementById("repeats").innerText = "" + repeats + "";
-    }
-    if (repeats < 1) {
-        clearInterval(countdown);
-        document.getElementById("timer").innerText = "GO!";
-        repeats = 1;
-        started = 1;
+        repeats = repeats + 1;
+        if (repeats >= 500) {
+            clearInterval(countdown);
+            document.getElementById("timer").innerText = "GO!";
+            repeats = 1;
+            started = 1;
+        }
     }
     document.addEventListener("keyup", pressKey);
     function pressKey(e) {
@@ -136,6 +133,8 @@
             car1.style.left = "0px";
             car2.style.left = "0px";
             started = 0;
+            countdownStarted = 0;
+            repeats = 0;
             document.getElementById("timer").innerText = "Start Game";
         }
     }
