@@ -59,12 +59,13 @@
     var car2Momentum = 1;
     var winner = 0;
     var started = 0;
-    var repeats = 0;
+    var repeats = 1;
+    var countdown = 0;
     document.getElementById("timer").onclick = function () {
         if (started === 0) {
             document.getElementById("timer").innerText = "5.00";
             repeats = 500;
-            var countdown = setInterval(count, 10);
+            countdown = setInterval(count, 10);
         }
     }
     function count() {
@@ -76,9 +77,9 @@
         document.getElementById("repeats").innerText = "" + repeats + "";
     }
     if (repeats < 1) {
-        alert("works");
         clearInterval(countdown);
         document.getElementById("timer").innerText = "GO!";
+        repeats = 1;
         started = 1;
     }
     document.addEventListener("keyup", pressKey);
