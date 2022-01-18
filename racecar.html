@@ -32,6 +32,75 @@
             /* Non-prefixed version, currently
                 supported by Chrome and Opera */
         }
+
+        #countup {
+            position: absolute;
+            top: 450px;
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                supported by Chrome and Opera */
+        }
+        #highscore {
+            position: absolute;
+            top: 500px;
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                supported by Chrome and Opera */
+        }
+        #blueScore {
+            position: absolute;
+            top: 550px;
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                supported by Chrome and Opera */
+        }
+        #HPScore {
+            position: absolute;
+            top: 600px;
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                supported by Chrome and Opera */
+        }
     </style>
 </head>
 
@@ -41,6 +110,10 @@
     <img id="car2"
         src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTjHmC3n7CBQtNC82OP5qArmbFDa0-HhO6HlQ&usqp=CAU">
     <h1 id="timer"> Start Game </h1>
+    <h1 id="countup"> 0.00s </h1>
+    <h1 id="highscore"> Highscore: 0.00s </h1>
+    <h1 id="blueScore"> Blue Car: 0 </h1>
+    <h1 id="HPScore"> Honda Pilot 2008: 0 </h1>
 </body>
 
 </html>
@@ -56,6 +129,10 @@
     var repeats = 0;
     var countdown = 0;
     var countdownStarted = 0;
+    var countup = 0;
+    var highscore = 9999999999;
+    var blueScore = 0;
+    var HPScore = 0;
     document.getElementById("timer").onclick = function () {
         if (started === 0) {
             if (countdownStarted === 0) {
@@ -77,6 +154,18 @@
             document.getElementById("timer").innerText = "GO!";
             repeats = 1;
             started = 1;
+            countup = setInterval(up, 10);
+        }
+    }
+    function up() {
+        var currentNumb = document.getElementById("countup").innerText;
+        currentNumb = currentNumb.replace("s","");
+        currentNumb = parseFloat(currentNumb);
+        currentNumb = currentNumb + 0.01;
+        document.getElementById("countup").innerText = "" + currentNumb.toFixed(2) + "s";
+        if (started === 0) {
+            clearInterval(countup);
+            document.getElementById("countup").innerText = "0.00s";
         }
     }
     document.addEventListener("keyup", pressKey);
@@ -106,20 +195,42 @@
             car1Momentum = car1Momentum * 0.99
             car1Prog = car1Prog + car1Momentum / 10;
             car1.style.left = Math.round(car1Prog) + "px";
+            car1.style.transform = "rotate(" + car1Prog + "deg)"
         }
         if (car2Momentum > 1) {
             car2Momentum = car2Momentum * 0.99
             car2Prog = car2Prog + car2Momentum / 10;
             car2.style.left = Math.round(car2Prog) + "px";
+            car2.style.transform = "rotate(" + car2Prog + "deg)"
         }
         if (winner === 0) {
             if (car1Prog >= window.screen.width) {
-                alert("blue car wins");
+                alert("blue car wins, finishing after " + document.getElementById("countup").innerText);
                 winner = 1;
+                var highscoreCheck = document.getElementById("countup").innerText;
+                highscoreCheck = highscoreCheck.replace("s","");
+                highscoreCheck = parseFloat(highscoreCheck);
+                blueScore += 1;
+                document.getElementById("blueScore").innerText = "Blue Car: " + blueScore;
+                if (highscoreCheck < highscore) {
+                    highscore = highscoreCheck;
+                    document.getElementById("highscore").innerText = "Highscore: " + highscoreCheck.toFixed(2) + "s";
+                    alert("blue car got a new highscore!");
+                }
             }
             if (car2Prog >= window.screen.width) {
-                alert("Honda Pilot 2008 wins");
+                alert("Honda Pilot 2008 wins, finishing after " + document.getElementById("countup").innerText);
                 winner = 1;
+                var highscoreCheck = document.getElementById("countup").innerText;
+                highscoreCheck = highscoreCheck.replace("s","");
+                highscoreCheck = parseFloat(highscoreCheck);
+                HPScore += 1;
+                document.getElementById("HPScore").innerText = "Honda Pilot 2008: " + HPScore;
+                if (highscoreCheck < highscore) {
+                    highscore = highscoreCheck;
+                    document.getElementById("highscore").innerText = "Highscore: " + highscoreCheck.toFixed(2) + "s";
+                    alert("Honda Pilot 2008 got a new highscore!");
+                }
             }
         }
         if (winner === 1) {
@@ -136,6 +247,7 @@
             countdownStarted = 0;
             repeats = 0;
             document.getElementById("timer").innerText = "Start Game";
+            document.getElementById("countup").innerText = "0.00s";
         }
     }
 </script>
