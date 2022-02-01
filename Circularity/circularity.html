@@ -18,17 +18,19 @@
 <script>
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext("2d");
-    var i = 0;
 
-    setInterval(rotater, 50);
+    setInterval(movement, 50);
+    setInterval(updater, 50);
 
-    function rotater() {
-        ctx.clearRect(0,0,1000,1000);
+    function movement() {
+
+    }
+
+    function updater() {
+        ctx.clearRect(0,0,2000,2000);
         ctx.beginPath();
-        ctx.translate(25, 25);
-        ctx.rotate(Math.PI / 100);
-        ctx.translate(-25, -25);
-        ctx.fillRect(25, 25, 75, 50);
+        ctx.fillStyle = '#034efc';
+        ctx.arc(25, 25, 25, 0, 2*Math.PI);
         ctx.stroke();
     }
 </script>
