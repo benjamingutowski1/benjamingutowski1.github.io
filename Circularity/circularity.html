@@ -20,22 +20,31 @@
     const ctx = canvas.getContext("2d");
     var direcTop = [];
     var direcLeft = [];
-    var circles = ["30-30", "150-90", "270-210"];
+    var circles = ["30-30", "150-90", "270-210", "49-250", "250-49","50-180","350-400","420-230"];
     var allx = [];
     var ally = [];
     var speed = 1;
 
-    setInterval(movement, 5);
-
     for (var i = 0; i < circles.length; i++) {
         var curCircle = circles[i];
-        curCircle.split("-");
+        curCircle = curCircle.split("-");
         allx.push(parseInt(curCircle[0], 10));
         ally.push(parseInt(curCircle[1], 10));
-        direcTop.push(1);
-        direcLeft.push(1);
+        var rndm = Math.floor(Math.random() * 2);
+        if (rndm === 1) {
+            direcTop.push(-1);
+        } else {
+            direcTop.push(1);
+        }
+        rndm = Math.floor(Math.random() * 2);
+        if (rndm === 1) {
+            direcLeft.push(-1);
+        } else {
+            direcLeft.push(1);
+        }
     }
 
+    setInterval(movement, 5);
 
     //current problem: all of the circles except 1 (i think) stop moving for split seconds
     function movement() {
@@ -44,39 +53,12 @@
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (var i = 0; i < circles.length; i++) {
             var curCircle = circles[i];
-            curCircle.split("-");
-            var posx = parseInt(curCircle.split("-")[0], 10);
-            var posy = parseInt(curCircle.split("-")[1], 10);
+            curCircle = curCircle.split("-");
+            var posx = allx[i];
+            var posy = ally[i];
             var curDirecLeft = direcLeft[i];
             var curDirecTop = direcTop[i];
 
-            //collision checker
-            var allxCopy = allx;
-            var allyCopy = ally;
-            allxCopy.splice(i, 1);
-            allxCopy.splice(i, 1);
-            for (var j = 0; j < allxCopy.length; j++) {
-                if (j >= i) {
-                    var jInd = j + 1;
-                } else {
-                    var jInd = j;
-                }
-                //collision with another box
-                if (Math.hypot(Math.abs(posx) - Math.abs(allxCopy[j]), Math.abs(posy) - Math.abs(allyCopy[j])) <= 50) {
-                    if (curDirecLeft === odirLeft[i]) {
-                        curDirecLeft = curDirecLeft * -1;
-                    }
-                    if (curDirecTop === odirTop[i]) {
-                        curDirecTop = curDirecTop * -1;
-                    }
-                    if (direcLeft[jInd] === odirLeft[jInd]) {
-                        direcLeft[jInd] = direcLeft[jInd] * -1;
-                    }
-                    if (direcTop[jInd] === odirTop[jInd]) {
-                        direcTop[jInd] = direcTop[jInd] * -1;
-                    }
-                }
-            }
             //collisions with sides
             //collision on side
             if (canvas.width - Math.abs(posx) <= 25 && curDirecLeft === odirLeft[i]) {
@@ -91,6 +73,56 @@
             }
             if (Math.abs(posy) <= 25 && curDirecTop === odirTop[i]) {
                 curDirecTop = curDirecTop * -1;
+            }
+
+            //collision checker
+            var allxCopy = [];
+            var allyCopy = [];
+            for (var j = 0; j < allx.length; j++) {
+                allxCopy.push(allx[j]);
+            }
+            for (var j = 0; j < ally.length; j++) {
+                allyCopy.push(ally[j]);
+            }
+            allxCopy.splice(i, 1);
+            allxCopy.splice(i, 1);
+            for (var j = 0; j < allxCopy.length; j++) {
+                if (j >= i) {
+                    var jInd = j + 1;
+                } else {
+                    var jInd = j;
+                }
+                //collision with another box
+                if (Math.hypot(Math.abs(posx) - Math.abs(allx[jInd]), Math.abs(posy) - Math.abs(ally[jInd])) <= 50) {
+                    if (direcLeft[jInd] === curDirecLeft && direcTop[jInd] !== curDirecTop) {
+                        if (curDirecTop === odirTop[i]) {
+                            curDirecTop = curDirecTop * -1;
+                        }
+                        if (direcTop[jInd] === odirTop[jInd]) {
+                            direcTop[jInd] = direcTop[jInd] * -1;
+                        }
+                    } else if (direcTop[jInd] === curDirecTop && direcLeft[jInd] !== curDirecLeft) {
+                        if (curDirecLeft === odirLeft[i]) {
+                            curDirecLeft = curDirecLeft * -1;
+                        }
+                        if (direcLeft[jInd] === odirLeft[jInd]) {
+                            direcLeft[jInd] = direcLeft[jInd] * -1;
+                        }
+                    } else {
+                        if (curDirecLeft === odirLeft[i]) {
+                            curDirecLeft = curDirecLeft * -1;
+                        }
+                        if (curDirecTop === odirTop[i]) {
+                            curDirecTop = curDirecTop * -1;
+                        }
+                        if (direcLeft[jInd] === odirLeft[jInd]) {
+                            direcLeft[jInd] = direcLeft[jInd] * -1;
+                        }
+                        if (direcTop[jInd] === odirTop[jInd]) {
+                            direcTop[jInd] = direcTop[jInd] * -1;
+                        }
+                    }
+                }
             }
 
             //right
