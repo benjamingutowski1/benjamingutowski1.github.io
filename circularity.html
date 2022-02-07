@@ -20,16 +20,26 @@
     const ctx = canvas.getContext("2d");
     var direcTop = [];
     var direcLeft = [];
-    var circles = ["30-30", "150-90", "270-210", "49-250", "250-49","50-180","350-400","420-230"];
+
+    //create new circles here ("posx-posy")
+    var circles = ["30-30", "150-90", "270-210", "49-250", "250-49", "50-180", "350-400", "420-230"];
+
     var allx = [];
     var ally = [];
+    var health = [];
+    var numbers = [];
+    var startingHealth = 100;
+    var damagePerBounce = 5;
     var speed = 1;
 
+    //loads vars into arrays based on previous info
     for (var i = 0; i < circles.length; i++) {
         var curCircle = circles[i];
         curCircle = curCircle.split("-");
         allx.push(parseInt(curCircle[0], 10));
         ally.push(parseInt(curCircle[1], 10));
+        health.push(startingHealth);
+        numbers.push(i + 1);
         var rndm = Math.floor(Math.random() * 2);
         if (rndm === 1) {
             direcTop.push(-1);
@@ -46,7 +56,6 @@
 
     setInterval(movement, 5);
 
-    //current problem: all of the circles except 1 (i think) stop moving for split seconds
     function movement() {
         const odirTop = direcTop;
         const odirLeft = direcLeft;
@@ -75,7 +84,7 @@
                 curDirecTop = curDirecTop * -1;
             }
 
-            //collision checker
+            //collision checker w/ other boxes
             var allxCopy = [];
             var allyCopy = [];
             for (var j = 0; j < allx.length; j++) {
@@ -92,9 +101,23 @@
                 } else {
                     var jInd = j;
                 }
-                //collision with another box
                 if (Math.hypot(Math.abs(posx) - Math.abs(allx[jInd]), Math.abs(posy) - Math.abs(ally[jInd])) <= 50) {
+                    //checking sides
+                    if (canvas.width - Math.abs(allx[jInd]) <= 25 && DirecLeft[jInd] === odirLeft[jInd]) {
+                        DirecLeft[jInd] = DirecLeft[jInd] * -1;
+                    }
+                    if (Math.abs(allx[jInd]) <= 25 && DirecLeft[jInd] === odirLeft[jInd]) {
+                        DirecLeft[jInd] = DirecLeft[jInd] * -1;
+                    }
+                    //checking top/bottom
+                    if (canvas.height - Math.abs(ally[jInd]) <= 25 && DirecTop[jInd] === odirTop[jInd]) {
+                        DirecTop[jInd] = DirecTop[jInd] * -1;
+                    }
+                    if (Math.abs(ally[jInd]) <= 25 && DirecTop[jInd] === odirTop[jInd]) {
+                        DirecTop[jInd] = DirecTop[jInd] * -1;
+                    }
                     if (direcLeft[jInd] === curDirecLeft && direcTop[jInd] !== curDirecTop) {
+                        //changing direction with another box
                         if (curDirecTop === odirTop[i]) {
                             curDirecTop = curDirecTop * -1;
                         }
@@ -141,6 +164,23 @@
             if (curDirecTop === -1) {
                 posy = posy - speed;
             }
+            //changes takes away health if bounce
+            if (health.length > 1) {
+                if (curDirecLeft !== odirLeft[i] || curDirecTop !== odirTop[i]) {
+                    health[i] = health[i] - damagePerBounce;
+                    if (health[i] <= 0) {
+                        //if a circle dies
+                        health.splice(i, 1);
+                        circles.splice(i, 1);
+                        allx.splice(i, 1);
+                        ally.splice(i, 1);
+                        DirecTop.splice(i, 1);
+                        DirecLeft.splice(i, 1);
+                        numbers.splice(i, 1);
+                        i = i - 1;
+                    }
+                }
+            }
 
             //putting all the info back into arrays
             direcTop[i] = curDirecTop;
@@ -149,8 +189,13 @@
             ally[i] = posy;
             circles[i] = "" + posx + "-" + posy + "";
             ctx.beginPath();
-            ctx.fillStyle = '#034efc';
+            ctx.fillStyle = "hsl(" + health[i] + ", 100%, 50%)"
             ctx.arc(posx, posy, 25, 0, 2 * Math.PI);
+            ctx.fill();
+            ctx.beginPath();
+            ctx.fillStyle = "black";
+            ctx.font = '16px serif';
+            ctx.fillText("" + numbers[i] + "", posx - 5, posy + 5);
             ctx.fill();
         }
     }
