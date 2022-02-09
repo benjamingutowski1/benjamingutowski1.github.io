@@ -23,7 +23,7 @@
 
     //create new circles here ("posx-posy")
 
-    var numOfCircles = 20;
+    var numOfCircles = 30;
     var radius = 25;
 
     var circles = [];
@@ -96,6 +96,10 @@
     function movement() {
         const odirTop = direcTop;
         const odirLeft = direcLeft;
+        var movement = [];
+        for (var i = 0; i < circles.length; i++) {
+            movement.push(0);
+        }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (var i = 0; i < circles.length; i++) {
             var curCircle = circles[i];
@@ -104,21 +108,39 @@
             var posy = ally[i];
             var curDirecLeft = direcLeft[i];
             var curDirecTop = direcTop[i];
+            var movingColliders = 0;
+            var sidesHit = 0;
 
             //collisions with sides
             //collision on side
             if (canvas.width - Math.abs(posx) <= radius && curDirecLeft === odirLeft[i]) {
                 curDirecLeft = curDirecLeft * -1;
+                if (sidesHit === 0) {
+                    movingColliders += 1;
+                }
+                sidesHit += 1;
             }
             if (Math.abs(posx) <= radius && curDirecLeft === odirLeft[i]) {
                 curDirecLeft = curDirecLeft * -1;
+                if (sidesHit === 0) {
+                    movingColliders += 1;
+                }
+                sidesHit += 1;
             }
             //collision on top/bottom
             if (canvas.height - Math.abs(posy) <= radius && curDirecTop === odirTop[i]) {
                 curDirecTop = curDirecTop * -1;
+                if (sidesHit === 0) {
+                    movingColliders += 1;
+                }
+                sidesHit += 1;
             }
             if (Math.abs(posy) <= radius && curDirecTop === odirTop[i]) {
                 curDirecTop = curDirecTop * -1;
+                if (sidesHit === 0) {
+                    movingColliders += 1;
+                }
+                sidesHit += 1;
             }
 
             //collision checker w/ other boxes
@@ -131,7 +153,7 @@
                 allyCopy.push(ally[j]);
             }
             allxCopy.splice(i, 1);
-            allxCopy.splice(i, 1);
+            allyCopy.splice(i, 1);
             for (var j = 0; j < allxCopy.length; j++) {
                 if (j >= i) {
                     var jInd = j + 1;
@@ -139,19 +161,28 @@
                     var jInd = j;
                 }
                 if (Math.hypot(Math.abs(posx) - Math.abs(allx[jInd]), Math.abs(posy) - Math.abs(ally[jInd])) <= (2 * radius)) {
-                    //checking sides
-                    if (canvas.width - Math.abs(allx[jInd]) <= radius && DirecLeft[jInd] === odirLeft[jInd]) {
-                        DirecLeft[jInd] = DirecLeft[jInd] * -1;
+                    if (movement[jInd] === 0) {
+                        movingColliders += 1;
                     }
-                    if (Math.abs(allx[jInd]) <= radius && DirecLeft[jInd] === odirLeft[jInd]) {
-                        DirecLeft[jInd] = DirecLeft[jInd] * -1;
+                    var newTop = curDirecTop;
+                    var newLeft = curDirecLeft;
+                    curDirecLeft = direcLeft[jInd];
+                    direcLeft[jInd] = newLeft;
+                    curDirecTop = direcTop[jInd];
+                    direcTop[jInd] = newTop;
+                    /* //checking sides for other colliding box
+                    if (canvas.width - Math.abs(allx[jInd]) <= radius && direcLeft[jInd] === odirLeft[jInd]) {
+                        direcLeft[jInd] = direcLeft[jInd] * -1;
                     }
-                    //checking top/bottom
-                    if (canvas.height - Math.abs(ally[jInd]) <= radius && DirecTop[jInd] === odirTop[jInd]) {
-                        DirecTop[jInd] = DirecTop[jInd] * -1;
+                    if (Math.abs(allx[jInd]) <= radius && direcLeft[jInd] === odirLeft[jInd]) {
+                        direcLeft[jInd] = direcLeft[jInd] * -1;
                     }
-                    if (Math.abs(ally[jInd]) <= radius && DirecTop[jInd] === odirTop[jInd]) {
-                        DirecTop[jInd] = DirecTop[jInd] * -1;
+                    //checking top/bottom for other colliding box
+                    if (canvas.height - Math.abs(ally[jInd]) <= radius && direcTop[jInd] === odirTop[jInd]) {
+                        direcTop[jInd] = direcTop[jInd] * -1;
+                    }
+                    if (Math.abs(ally[jInd]) <= radius && direcTop[jInd] === odirTop[jInd]) {
+                        direcTop[jInd] = direcTop[jInd] * -1;
                     }
                     if (direcLeft[jInd] === curDirecLeft && direcTop[jInd] !== curDirecTop) {
                         //changing direction with another box
@@ -180,26 +211,29 @@
                         }
                         if (direcTop[jInd] === odirTop[jInd]) {
                             direcTop[jInd] = direcTop[jInd] * -1;
-                        }
-                    }
+                        } 
+                    } */
                 }
             }
-
-            //right
-            if (curDirecLeft === 1) {
-                posx += speed;
-            }
-            //left
-            if (curDirecLeft === -1) {
-                posx = posx - speed;
-            }
-            //down
-            if (curDirecTop === 1) {
-                posy += speed;
-            }
-            //up
-            if (curDirecTop === -1) {
-                posy = posy - speed;
+            if (movingColliders > 1) {
+                movement[i] = 1;
+            } else {
+                //right
+                if (curDirecLeft === 1) {
+                    posx += speed;
+                }
+                //left
+                if (curDirecLeft === -1) {
+                    posx = posx - speed;
+                }
+                //down
+                if (curDirecTop === 1) {
+                    posy += speed;
+                }
+                //up
+                if (curDirecTop === -1) {
+                    posy = posy - speed;
+                }
             }
             //changes takes away health if bounce
             if (health.length > 1) {
