@@ -55,8 +55,8 @@
             for (var j = 0; j < ally.length; j++) {
                 allyCopy.push(ally[j]);
             }
-            allxCopy.splice(i, 1);
-            allxCopy.splice(i, 1);
+            allxCopy = allxCopy.splice(i, 1);
+            allxCopy = allxCopy.splice(i, 1);
             var collideCheck = 0;
             for (var j = 0; j < allxCopy.length; j++) {
                 if (j >= i) {
@@ -99,6 +99,7 @@
         var allColliders = [];
         var movingColliders = [];
         var movingColliderIds = [];
+        var directionChanges = [];
         for (var j = 0; j < circles.length; j++) {
             var curColliders = 0;
             var sidesHit = 0;
@@ -107,39 +108,46 @@
             //number of collisions with other boxes
             for (var k = 0; k < circles.length; k++) {
                 if (Math.hypot(Math.abs(allx[j]) - Math.abs(allx[k]), Math.abs(ally[j]) - Math.abs(ally[k])) <= (2 * radius)) {
-                    curColliders += 1;
                     if (j !== k) {
                         curMovColliders += 1;
+                        curColliders += 1;
                         movIndex = k;
                     }
                 }
             }
-            curColliders = curColliders - 1;
             //collisions on top/bottom
-            if (canvas.width - Math.abs(allx[j]) <= radius && curColliders < 1) {
-                direcLeft[j] = direcLeft[j] * -1;
+            if (canvas.width - Math.abs(allx[j]) <= radius) {
+                if (curColliders < 1 && sidesHit !== 1) {
+                    direcLeft[j] = direcLeft[j] * -1;
+                }
                 if (sidesHit === 0) {
                     curColliders += 1;
                 }
                 sidesHit += 1;
             }
-            if (Math.abs(allx[j]) <= radius && curColliders < 1) {
-                direcLeft[j] = direcLeft[j] * -1;
+            if (Math.abs(allx[j]) <= radius) {
+                if (curColliders < 1 && sidesHit !== 1) {
+                    direcLeft[j] = direcLeft[j] * -1;
+                }
                 if (sidesHit === 0) {
                     curColliders += 1;
                 }
                 sidesHit += 1;
             }
             //collision on top/bottom
-            if (canvas.height - Math.abs(ally[j]) <= radius && curColliders < 1) {
-                direcTop[j] = direcTop[j] * -1;
+            if (canvas.height - Math.abs(ally[j]) <= radius) {
+                if (curColliders < 1 && sidesHit !== 1) {
+                    direcTop[j] = direcTop[j] * -1;
+                }
                 if (sidesHit === 0) {
                     curColliders += 1;
                 }
                 sidesHit += 1;
             }
-            if (Math.abs(ally[j]) <= radius && curColliders < 1) {
-                direcTop[j] = direcTop[j] * -1;
+            if (Math.abs(ally[j]) <= radius) {
+                if (curColliders < 1 && sidesHit !== 1) {
+                    direcTop[j] = direcTop[j] * -1;
+                }
                 if (sidesHit === 0) {
                     curColliders += 1;
                 }
@@ -148,21 +156,24 @@
             movingColliders.push(curMovColliders);
             movingColliderIds.push(movIndex);
             allColliders.push(curColliders);
+            directionChanges.push(true);
         }
         for (var i = 0; i < circles.length; i++) {
-            if (allColliders[i] < 2) {
-                if (movingColliders[i] === 1) {
-                    alert(i + " " + movingColliderIds[i])
-                    var newTop = direcTop[i];
-                    var newLeft = direcLeft[i];
-                    direcLeft[i] = direcLeft[movingColliderIds[i]];
-                    direcTop[i] = direcTop[movingColliderIds[i]];
+            if (movingColliders[i] === 1 && allColliders[i] === 1) {
+                var newTop = direcTop[i];
+                var newLeft = direcLeft[i];
+                if (directionChanges[i]) {
+                    directionChanges[i] = false;
                     if (allColliders[movingColliderIds[i]] < 2) {
-                        direcTop[movingColliderIds[i]] = newTop;
-                        direcLeft[movingColliderIds[i]] = newLeft;
+                        direcLeft[i] = direcLeft[movingColliderIds[i]];
+                        direcTop[i] = direcTop[movingColliderIds[i]];
+                    } else {
+                        direcLeft[i] = direcLeft[i] * -1;
+                        direcTop[i] = direcTop[i] * -1;
                     }
                 }
             }
+
         }
         ctx.clearRect(0, 0, canvas.width, canvas.height);
         for (var i = 0; i < circles.length; i++) {

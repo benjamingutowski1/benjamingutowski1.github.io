@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+      #canvas {
+        border-style: solid;
+
+        border-width: 2px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <canvas id="canvas" height="500" width="750"> </canvas>
+  </body>
+</html>
+
+<script>
+  const canvas = document.getElementById("canvas");
+  const ctx = canvas.getContext("2d");
+
+  var x = [];
+  var y = [];
+  var speedx = [];
+  var speedy = [];
+  var color = [];
+  var radius = 20;
+  speedrange = 10;
+  var width = 200;
+  var height = 200;
+
+  x.push(150);
+    y.push(50);
+    speedx.push(20);
+    speedy.push(10);
+    color.push("hsl(" + 10 + ", 100%, 50%)");
+    
+
+    x.push(100);
+    y.push(100);
+    speedx.push(-10);
+    speedy.push(-10);
+    color.push("hsl(" + 100 + ", 100%, 50%)");
+
+
+  for (var i = 0; i < 0; i = i + 1) {
+    x.push(Math.random() * (width - radius) + 2 * radius);
+    y.push(Math.random() * (height - radius) + 2 * radius);
+    speedx.push(Math.random() * speedrange - speedrange / 2);
+    speedy.push(Math.random() * speedrange - speedrange / 2);
+    color.push("hsl(" + Math.random() * 360 + ", 100%, 50%)");
+  }
+
+  setInterval(main, 50);
+
+  function main() {
+      
+    ctx.clearRect(0, 0, 1000, 1000);
+    ctx.fillText(Math.hypot(Math.abs(x[0]) - Math.abs(x[1]),Math.abs(y[0]) - Math.abs(y[1])),20,20)
+    for (let i = 0; i < x.length; i++) {
+      if (x[i] > width - radius/2) {
+        speedx[i] = -speedx[i];
+      }
+      if (x[i] < 0 + radius) {
+        speedx[i] = -speedx[i];
+      }
+      if (y[i] > height  - radius/2) {
+        speedy[i] = -speedy[i];
+      }
+      if (y[i] < 0 + radius) {
+        speedy[i] = -speedy[i];
+      }
+      for (let j = 0; j < x.length; j++) {
+        if (j !== i) {
+          //don't check a circle against itself
+          ctx.beginPath();
+          ctx.moveTo(x[i], y[i]);
+          ctx.lineTo(x[j], y[j]);
+          ctx.strokeStyle = "black";
+          //collision code here
+          if (
+            Math.hypot(
+              Math.abs(x[i]) - Math.abs(x[j]),
+              Math.abs(y[i]) - Math.abs(y[j])
+            ) <=
+            radius * 2
+          ) {
+            ctx.strokeStyle = "red";
+            //collision code from this video
+            var tempx = speedx[j];
+            var tempy = speedy[j];
+            speedy[j] = -speedy[i];
+            speedx[j] = -speedx[i];
+            speedx[i] = -tempx;
+            speedy[i] = -tempy;
+          }
+          ctx.stroke();
+        }
+      }
+      x[i] = x[i] + speedx[i];
+      y[i] = y[i] + speedy[i];
+      ctx.fillStyle = color[i];
+      ctx.beginPath();
+      ctx.arc(x[i], y[i], radius, 0, Math.PI * 2);
+      ctx.fill(); 
+      ctx.fillStyle = "black"     
+      ctx.fillText(speedx[i] + ", " + speedy[i],x[i], y[i])
+
+    }
+  }
+</script>
