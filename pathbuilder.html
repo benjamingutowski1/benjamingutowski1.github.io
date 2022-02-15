@@ -1,0 +1,81 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <style>
+        #canvas {
+            border-style: solid;
+            border-width: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" height="500" width="500"> </canvas>
+</body>
+
+</html>
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext('2d');
+
+    //wallSize has to be a number that 500 can be divided by
+    var wallSize = 50;
+    var wallsx = [];
+    var wallsy = [];
+    var pathsX = [];
+    var pathsY = [];
+    var start = [0,0];
+    var end = [450,450];
+
+    loadOrigins();
+    loadPath();
+    drawWall(50,50);
+
+    //puts all possible wall spots into an array
+    function loadOrigins() {
+        var xNum = canvas.height / wallSize;
+        var currentX = -1 * wallSize;
+        for (var i = 0; i < xNum; i++) {
+            currentX += wallSize;
+            var currentY = -1 * wallSize;
+            for (var j = 0; j < xNum; j++) {
+                currentY += wallSize;
+                wallsx.push(currentX);
+                wallsy.push(currentY);
+            }
+        }
+    }
+
+    //loads the path that the AI will try to follow
+    function loadPath() {
+        var startX = start[0];
+        var startY = start[1];
+        var endX = end[0];
+        var endY = end[1];
+        var speedX = 0.0000000000001 * (endX - startX)
+        if (speedX > 0) {
+            speedX = Math.ceil(speedX);
+        } else if (speedX < 0) {
+            speedX = Math.floor(speedX);
+        }
+        speedX = speedX * wallSize;
+        var speedY = 0.0000000000001 * (endY - startY)
+        if (speedY > 0) {
+            speedY = Math.ceil(speedY);
+        } else if (speedY < 0) {
+            speedY = Math.floor(speedY);
+        }
+        speedY = speedY * wallSize;
+    }
+
+    //draws a solid brick at posx, posy
+    function drawWall(posx, posy) {
+        wallsx.push(posx);
+        wallsy.push(posy);
+        ctx.beginPath();
+        ctx.fillRect(posx,posy,wallSize,wallSize);
+        ctx.stroke();
+    }
+
+</script>
