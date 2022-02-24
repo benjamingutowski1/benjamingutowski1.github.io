@@ -1,0 +1,26 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <style>
+        #canvas {
+            border-style: solid;
+            border-width: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" height=500 width=500> </canvas>
+    <img id="spritesheet" src="spritesheetTest.png">
+</body>
+
+</html>
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext('2d');
+    window.onload = function() {
+        var img = document.getElementById("spritesheet");
+        ctx.drawImage(img, 0, 0, 31, 31, 10, 10, 96, 96);
+    }
+</script>
