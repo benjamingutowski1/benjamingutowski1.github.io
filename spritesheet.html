@@ -7,20 +7,63 @@
             border-style: solid;
             border-width: 2px;
         }
+
+        #spritesheet {
+            display: none;
+        }
+        #start {
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                supported by Chrome and Opera */
+        }
     </style>
 </head>
 
 <body>
-    <canvas id="canvas" height=500 width=500> </canvas>
-    <img id="spritesheet" src="spritesheetTest.png">
+    <canvas id="canvas" height=512 width=512> </canvas>
+    <img id="spritesheet" src="spritesheetTest2.png">
+    <h1 id="start"> Click to start </h1>
 </body>
 
 </html>
 <script>
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext('2d');
-    window.onload = function() {
-        var img = document.getElementById("spritesheet");
-        ctx.drawImage(img, 0, 0, 31, 31, 10, 10, 96, 96);
+    var posx = 0;
+    var posy = 0;
+    var interval;
+    var img;
+    window.onload = function () {
+        img = document.getElementById("spritesheet");
+        ctx.drawImage(img, 0, 0, 512, 512, 0, 0, 512, 512);
+    }
+    document.getElementById("start").onclick = function () {
+        posx = 2048;
+        posy = 512;
+        interval = setInterval(anim, 50);
+        document.getElementById("start").style.display = "none";
+    }
+    function anim() {
+        ctx.clearRect(0, 0, 1000, 1000);
+        ctx.drawImage(img, posx, posy, 512, 512, 0, 0, 512, 512);
+        posx += 512;
+        if (posx >= 3072) {
+            posx = 0;
+            posy += 512;
+        }
+        if (posy === 3072 && posx >= 1536) {
+            posy = 1024;
+            posx = 2560;
+        }
     }
 </script>
