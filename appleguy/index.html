@@ -102,17 +102,19 @@
                 y = animCoords.rightY;
             }
         }
-        if (posx <= 0 && speedx < 0) {
+        posx = posx + speedx;
             posy = posy + speedy;
-        } else if (posx >= canvas.width - imgWidth && speedx > 0) {
-            posy = posy + speedy;
-        } else if (posy <= 0 && speedy < 0) {
-            posx = posx + speedx;
-        } else if (posy >= canvas.height - imgHeight && speedy > 0) {
-            posx = posx + speedx;
-        } else {
-            posx = posx + speedx;
-            posy = posy + speedy;
+        if (posx < 0) {
+            posx = 0;
+        }
+        if (posy < 0) {
+            posy = 0;
+        }
+        if (posx > canvas.width - imgWidth) {
+            posx = canvas.width - imgWidth;
+        }
+        if (posy > canvas.height - imgHeight) {
+            posy = canvas.height - imgHeight;
         }
     }
     document.addEventListener("keydown", pressKey);
