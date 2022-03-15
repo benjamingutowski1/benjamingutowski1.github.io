@@ -223,7 +223,7 @@
             document.getElementById("countup").innerText = "0.00s";
         }
     }
-    document.addEventListener("keyup", pressKey);
+    document.addEventListener("keydown", pressKey);
     function pressKey(e) {
         if (started === 1) {
             if (e.key === "q") {

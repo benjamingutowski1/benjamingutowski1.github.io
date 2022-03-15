@@ -1,0 +1,148 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <style>
+        #canvas {
+            border-style: solid;
+            border-width: 2px;
+        }
+
+        #img {
+            display: none;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" height="500" width="500"></canvas>
+    <img id="img" src="pokemonSprites.png">
+</body>
+
+</html>
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext('2d');
+    var img = document.getElementById("img");
+    var animCoords = {
+        rightX: [650, 720, 790, 720],
+        rightY: [225],
+        upX: [650, 720, 790, 720],
+        upY: [315],
+        leftX: [650, 720, 790, 720],
+        leftY: [132],
+        downX: [650, 720, 790, 720],
+        downY: [41],
+    }
+    var x = [650, 720, 790, 720];
+    var y = [225];
+    var xInd = 0;
+    var yInd = 0;
+    var posx = 50;
+    var posy = 50;
+    var overallSpeed = 1.5;
+    var speedx = 0;
+    var speedy = 0;
+    var wpress = false;
+    var spress = false;
+    var apress = false;
+    var dpress = false;
+    var imgHeight = 60;
+    var imgWidth = 45;
+    canvas.height = window.innerHeight - 25;
+    canvas.width = window.innerWidth - 25;
+    window.onload = function () {
+        setInterval(anim, 100);
+        setInterval(movement, 0.5);
+    }
+    function anim() {
+        if (speedx !== 0 || speedy !== 0) {
+            xInd += 1;
+            if (xInd > x.length - 1) {
+                xInd = 0;
+                yInd += 1;
+                if (yInd > y.length - 1) {
+                    yInd = 0;
+                }
+            }
+        } else {
+            xInd = 1;
+        }
+    }
+    function movement() {
+        speedx = 0;
+        speedy = 0;
+        ctx.clearRect(0, 0, 100000, 100000);
+        ctx.drawImage(img, x[xInd], y[yInd], imgWidth, imgHeight, posx, posy, imgWidth, imgHeight);
+        if (wpress) {
+            speedy = speedy - overallSpeed;
+            if (spress === false) {
+                x = animCoords.upX;
+                y = animCoords.upY;
+            }
+        }
+        if (spress) {
+            speedy = speedy + overallSpeed;
+            if (wpress === false) {
+                x = animCoords.downX;
+                y = animCoords.downY;
+            }
+        }
+        if (apress) {
+            speedx = speedx - overallSpeed;
+            if (dpress === false) {
+                x = animCoords.leftX;
+                y = animCoords.leftY;
+            }
+        }
+        if (dpress) {
+            speedx = speedx + overallSpeed;
+            if (apress === false) {
+                x = animCoords.rightX;
+                y = animCoords.rightY;
+            }
+        }
+        if (posx <= 0 && speedx < 0) {
+            posy = posy + speedy;
+        } else if (posx >= canvas.width - imgWidth && speedx > 0) {
+            posy = posy + speedy;
+        } else if (posy <= 0 && speedy < 0) {
+            posx = posx + speedx;
+        } else if (posy >= canvas.height - imgHeight && speedy > 0) {
+            posx = posx + speedx;
+        } else {
+            posx = posx + speedx;
+            posy = posy + speedy;
+        }
+    }
+    document.addEventListener("keydown", pressKey);
+    function pressKey(e) {
+        if (e.key === "w") {
+            wpress = true;
+        }
+        if (e.key === "s") {
+            spress = true;
+        }
+        if (e.key === "a") {
+            apress = true;
+        }
+        if (e.key === "d") {
+            dpress = true;
+        }
+    }
+    document.addEventListener("keyup", pressKey2);
+    function pressKey2(e) {
+        if (e.key === "w") {
+            wpress = false
+        }
+        if (e.key === "s") {
+            spress = false
+        }
+        if (e.key === "a") {
+            apress = false;
+        }
+        if (e.key === "d") {
+            dpress = false;
+        }
+    }
+</script>
