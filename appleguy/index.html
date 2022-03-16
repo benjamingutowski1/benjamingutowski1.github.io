@@ -4,8 +4,9 @@
 <head>
     <style>
         #canvas {
-            border-style: solid;
-            border-width: 2px;
+            position: absolute;
+            left: 0px;
+            top: 0px;
         }
 
         #img {
@@ -21,18 +22,30 @@
 
 </html>
 <script>
+    //setting initial vars
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext('2d');
     var img = document.getElementById("img");
-    var animCoords = {
+    var colliders = [{
+        posx: 500,
+        posy: 500,
+        width: 150,
+        height: 300
+    }, {
+        posx: 300,
+        posy: 600,
+        height: 50,
+        width: 90
+    }]
+    var walkAnimCoords = {
         rightX: [650, 720, 790, 720],
-        rightY: [225],
+        rightY: [224],
         upX: [650, 720, 790, 720],
-        upY: [315],
+        upY: [314],
         leftX: [650, 720, 790, 720],
-        leftY: [132],
+        leftY: [131],
         downX: [650, 720, 790, 720],
-        downY: [41],
+        downY: [40],
     }
     var x = [650, 720, 790, 720];
     var y = [225];
@@ -49,8 +62,8 @@
     var dpress = false;
     var imgHeight = 60;
     var imgWidth = 45;
-    canvas.height = window.innerHeight - 25;
-    canvas.width = window.innerWidth - 25;
+    canvas.height = window.innerHeight - 4;
+    canvas.width = window.innerWidth - 4;
     window.onload = function () {
         setInterval(anim, 100);
         setInterval(movement, 0.5);
@@ -74,36 +87,53 @@
         speedy = 0;
         ctx.clearRect(0, 0, 100000, 100000);
         ctx.drawImage(img, x[xInd], y[yInd], imgWidth, imgHeight, posx, posy, imgWidth, imgHeight);
+        ctx.fillStyle = "grey"
+        var safePosx = posx;
+        var safePosy = posy;
+        for (i = 0; i < colliders.length; i++) {
+            ctx.fillRect(colliders[i].posx, colliders[i].posy, colliders[i].width, colliders[i].height);
+        }
+        ctx.stroke();
         if (wpress) {
             speedy = speedy - overallSpeed;
             if (spress === false) {
-                x = animCoords.upX;
-                y = animCoords.upY;
+                x = walkAnimCoords.upX;
+                y = walkAnimCoords.upY;
             }
         }
         if (spress) {
             speedy = speedy + overallSpeed;
             if (wpress === false) {
-                x = animCoords.downX;
-                y = animCoords.downY;
+                x = walkAnimCoords.downX;
+                y = walkAnimCoords.downY;
             }
         }
         if (apress) {
             speedx = speedx - overallSpeed;
             if (dpress === false) {
-                x = animCoords.leftX;
-                y = animCoords.leftY;
+                x = walkAnimCoords.leftX;
+                y = walkAnimCoords.leftY;
             }
         }
         if (dpress) {
             speedx = speedx + overallSpeed;
             if (apress === false) {
-                x = animCoords.rightX;
-                y = animCoords.rightY;
+                x = walkAnimCoords.rightX;
+                y = walkAnimCoords.rightY;
             }
         }
         posx = posx + speedx;
-            posy = posy + speedy;
+        for (i = 0; i < colliders.length; i++) {
+            if (posx + imgWidth >= colliders[i].posx && posx <= colliders[i].posx + colliders[i].width && posy + imgHeight >= colliders[i].posy && posy <= colliders[i].posy + colliders[i].height) {
+                posx = safePosx;
+            }
+        }
+        posy = posy + speedy;
+        for (i = 0; i < colliders.length; i++) {
+            if (posx + imgWidth >= colliders[i].posx && posx <= colliders[i].posx + colliders[i].width && posy + imgHeight >= colliders[i].posy && posy <= colliders[i].posy + colliders[i].height) {
+                posy = safePosy;
+            }
+        }
         if (posx < 0) {
             posx = 0;
         }
