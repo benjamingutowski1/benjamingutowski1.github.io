@@ -12,6 +12,10 @@
         #img {
             display: none;
         }
+        body {
+            background-image:url(https://assetstorev1-prd-cdn.unity3d.com/package-screenshot/bd90b3a3-b887-4478-bf6d-b2c8a7ada13d_scaled.jpg);
+            background-repeat:no-repeat;
+        }
     </style>
 </head>
 
@@ -27,15 +31,21 @@
     const ctx = canvas.getContext('2d');
     var img = document.getElementById("img");
     var colliders = [{
-        posx: 500,
-        posy: 500,
-        width: 150,
-        height: 300
+        posx: 295, posy: 200, width: 274, height: 115
     }, {
-        posx: 300,
-        posy: 600,
-        height: 50,
-        width: 90
+        posx: 690, posy: 200, width: 249, height: 115
+    }, {
+        posx: 831, posy: 308, width: 64, height: 97
+    }, {
+        posx: 482, posy: 308, width: 70, height: 104
+    }, {
+        posx: 552, posy: 308, width: 18, height: 125
+    }, {
+        posx: 689, posy: 308, width: 18, height: 125
+    }, {
+        posx: 738, posy: 170, width: 13, height: 100
+    }, {
+        posx: 232, posy: 319, width: 24, height: 20
     }]
     var walkAnimCoords = {
         rightX: [650, 720, 790, 720],
@@ -64,6 +74,8 @@
     var imgWidth = 45;
     canvas.height = window.innerHeight - 4;
     canvas.width = window.innerWidth - 4;
+    canvas.height = 800;
+    canvas.width = 1200;
     window.onload = function () {
         setInterval(anim, 100);
         setInterval(movement, 0.5);
@@ -86,14 +98,16 @@
         speedx = 0;
         speedy = 0;
         ctx.clearRect(0, 0, 100000, 100000);
-        ctx.drawImage(img, x[xInd], y[yInd], imgWidth, imgHeight, posx, posy, imgWidth, imgHeight);
-        ctx.fillStyle = "grey"
+        ctx.fillStyle = "grey";
+        ctx.globalAlpha = 0;
         var safePosx = posx;
         var safePosy = posy;
         for (i = 0; i < colliders.length; i++) {
             ctx.fillRect(colliders[i].posx, colliders[i].posy, colliders[i].width, colliders[i].height);
         }
         ctx.stroke();
+        ctx.globalAlpha = 1;
+        ctx.drawImage(img, x[xInd], y[yInd], imgWidth, imgHeight, posx, posy, imgWidth, imgHeight);
         if (wpress) {
             speedy = speedy - overallSpeed;
             if (spress === false) {
@@ -149,31 +163,31 @@
     }
     document.addEventListener("keydown", pressKey);
     function pressKey(e) {
-        if (e.key === "w") {
+        if (e.key === "w" || e.key === "ArrowUp") {
             wpress = true;
         }
-        if (e.key === "s") {
+        if (e.key === "s" || e.key === "ArrowDown") {
             spress = true;
         }
-        if (e.key === "a") {
+        if (e.key === "a" || e.key === "ArrowLeft") {
             apress = true;
         }
-        if (e.key === "d") {
+        if (e.key === "d" || e.key === "ArrowRight") {
             dpress = true;
         }
     }
     document.addEventListener("keyup", pressKey2);
     function pressKey2(e) {
-        if (e.key === "w") {
+        if (e.key === "w" || e.key === "ArrowUp") {
             wpress = false
         }
-        if (e.key === "s") {
+        if (e.key === "s" || e.key === "ArrowDown") {
             spress = false
         }
-        if (e.key === "a") {
+        if (e.key === "a" || e.key === "ArrowLeft") {
             apress = false;
         }
-        if (e.key === "d") {
+        if (e.key === "d" || e.key === "ArrowRight") {
             dpress = false;
         }
     }
