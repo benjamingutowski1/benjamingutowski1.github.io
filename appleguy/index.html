@@ -12,9 +12,14 @@
         #img {
             display: none;
         }
+
         body {
-            background-image:url(https://assetstorev1-prd-cdn.unity3d.com/package-screenshot/bd90b3a3-b887-4478-bf6d-b2c8a7ada13d_scaled.jpg);
-            background-repeat:no-repeat;
+            background-image: url(https://assetstorev1-prd-cdn.unity3d.com/package-screenshot/bd90b3a3-b887-4478-bf6d-b2c8a7ada13d_scaled.jpg);
+            background-repeat: no-repeat;
+        }
+
+        #background {
+            display: none;
         }
     </style>
 </head>
@@ -22,6 +27,7 @@
 <body>
     <canvas id="canvas" height="500" width="500"></canvas>
     <img id="img" src="pokemonSprites.png">
+    <img id="background" src="environmentCreation.jpg">
 </body>
 
 </html>
@@ -30,22 +36,9 @@
     const canvas = document.getElementById("canvas");
     const ctx = canvas.getContext('2d');
     var img = document.getElementById("img");
+    var background = document.getElementById("background");
     var colliders = [{
         posx: 295, posy: 200, width: 274, height: 115
-    }, {
-        posx: 690, posy: 200, width: 249, height: 115
-    }, {
-        posx: 831, posy: 308, width: 64, height: 97
-    }, {
-        posx: 482, posy: 308, width: 70, height: 104
-    }, {
-        posx: 552, posy: 308, width: 18, height: 125
-    }, {
-        posx: 689, posy: 308, width: 18, height: 125
-    }, {
-        posx: 738, posy: 170, width: 13, height: 100
-    }, {
-        posx: 232, posy: 319, width: 24, height: 20
     }]
     var walkAnimCoords = {
         rightX: [650, 720, 790, 720],
@@ -72,8 +65,15 @@
     var dpress = false;
     var imgHeight = 60;
     var imgWidth = 45;
+    var colliderStart = false;
+    var colliderX = false;
+    var colliderY = false;
+    var colliderH = false;
+    var colliderW = false;
+    var colliderInt;
     canvas.height = window.innerHeight - 4;
     canvas.width = window.innerWidth - 4;
+    //height & width of the background environment
     canvas.height = 800;
     canvas.width = 1200;
     window.onload = function () {
@@ -99,7 +99,7 @@
         speedy = 0;
         ctx.clearRect(0, 0, 100000, 100000);
         ctx.fillStyle = "grey";
-        ctx.globalAlpha = 0;
+        ctx.globalAlpha = 0.8;
         var safePosx = posx;
         var safePosy = posy;
         for (i = 0; i < colliders.length; i++) {
@@ -189,6 +189,32 @@
         }
         if (e.key === "d" || e.key === "ArrowRight") {
             dpress = false;
+        }
+    }
+    document.addEventListener("mousedown", mousedown);
+    function mousedown() {
+        colliderX = event.clientX;
+        colliderY = event.clientY;
+        colliderStart = true;
+        colliderInt = setInterval(0.5, createCollider);
+    }
+    document.addEventListener("mouseup", mouseup);
+    function mouseup() {
+        colliderStart = false;
+        clearInterval(colliderInt);
+        createCollider();
+    }
+    function createCollider() {
+        if (colliderStart) {
+            colliderH = event.clientY;
+            colliderW = event.clientX;
+        } else {
+            alert(colliderH + " " + colliderY)
+            colliderH = colliderH - colliderY;
+            colliderW = colliderW - colliderX;
+            colliders.push({ posx: colliderX, posy: colliderY, height: colliderH, width: colliderW })
+            colliderX = false;
+            colliderY = false;
         }
     }
 </script>
