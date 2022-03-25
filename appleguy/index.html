@@ -70,6 +70,8 @@
     var colliderY = false;
     var colliderH = false;
     var colliderW = false;
+    var mouseposx;
+    var mouseposy;
     var colliderInt;
     canvas.height = window.innerHeight - 4;
     canvas.width = window.innerWidth - 4;
@@ -100,6 +102,12 @@
         ctx.clearRect(0, 0, 100000, 100000);
         ctx.fillStyle = "grey";
         ctx.globalAlpha = 0.8;
+        if (colliderStart) {
+            colliderH = mouseposy - colliderY;
+            colliderW = mouseposx - colliderX
+            ctx.fillStyle = "grey";
+            ctx.fillRect(colliderX, colliderY, colliderW, colliderH);
+        }
         var safePosx = posx;
         var safePosy = posy;
         for (i = 0; i < colliders.length; i++) {
@@ -192,29 +200,29 @@
         }
     }
     document.addEventListener("mousedown", mousedown);
-    function mousedown() {
+    function mousedown(event) {
         colliderX = event.clientX;
         colliderY = event.clientY;
         colliderStart = true;
-        colliderInt = setInterval(0.5, createCollider);
+    }
+    document.addEventListener("mousemove", mousemove);
+    function mousemove(event) {
+        mouseposy = event.clientY;
+        mouseposx = event.clientX;
     }
     document.addEventListener("mouseup", mouseup);
-    function mouseup() {
+    function mouseup(event) {
         colliderStart = false;
-        clearInterval(colliderInt);
-        createCollider();
-    }
-    function createCollider() {
-        if (colliderStart) {
-            colliderH = event.clientY;
-            colliderW = event.clientX;
-        } else {
-            alert(colliderH + " " + colliderY)
-            colliderH = colliderH - colliderY;
-            colliderW = colliderW - colliderX;
-            colliders.push({ posx: colliderX, posy: colliderY, height: colliderH, width: colliderW })
-            colliderX = false;
-            colliderY = false;
+        colliderH = event.clientY - colliderY;
+        colliderW = event.clientX - colliderX;
+        if (event.clientX < colliderX) {
+            colliderX = event.clientX;
         }
+        if (event.clientY < colliderY) {
+            colliderY = event.clientY;
+        }
+        colliders.push({ posx: colliderX, posy: colliderY, height: Math.abs(colliderH), width: Math.abs(colliderW) })
+        colliderX = false;
+        colliderY = false;
     }
 </script>
