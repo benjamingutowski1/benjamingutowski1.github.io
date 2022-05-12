@@ -1,0 +1,29 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <style>
+            #canvas {
+                border-style: solid;
+                border-width: 2px;
+            }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas" height="1000" width="1000"></canvas>
+    </body>
+</html>
+<script>
+    const canvas = document.getElementById("canvas");
+    const ctx = canvas.getContext('2d');
+    var food = [];
+    for (var i = 0; i < 150; i++) {
+        var posx = Math.floor(Math.random() * canvas.width) + 1;
+        var posy = Math.floor(Math.random() * canvas.height) + 1;
+        while (food.includes(posx) && food.includes(posy)) {
+            var posx = Math.floor(Math.random() * canvas.width) + 1;
+            var posy = Math.floor(Math.random() * canvas.height) + 1;
+        }
+        food.push([posx, posy]);
+        ctx.fillRect(posx - 3,posy - 3,5,5);
+    }
+</script>
