@@ -1,0 +1,78 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <style>
+        #canvas {
+            border-style: solid;
+            border-width: 2px;
+            position: absolute;
+            top: 25px;
+        }
+        #roll {
+            position: absolute;
+            top: 525px;
+            font-size: 50px;
+            font-family: 'Courier New', Courier, monospace;
+            border-style: solid;
+            border-width: 1px;
+            width: 250px;
+            text-align: center;
+        }
+        .noselect {
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                supported by Chrome and Opera */
+        }
+        </style>
+    </head>
+    <body>
+        <canvas height="500" width="500" id="canvas"> </canvas>
+        <p id = "roll" class= "noselect"> Reroll </p>
+    </body>
+</html>
+<script>
+    //PAGE SETUP
+    var canvas = document.getElementById("canvas");
+    shiftMiddle(canvas,500);
+    shiftMiddle(document.getElementById("roll"),250);
+
+    //shifts an html element to the middle of the screen. The position must be set to absolute;
+    function shiftMiddle(element,width) {
+        element.style.left = (window.innerWidth / 2 - (width/2)) + "px";
+    }
+
+    //VAR SETUP
+    var currentBlocks = [1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]
+    var imgIDs = ["https://public.blenderkit.com/thumbnails/assets/334d41ffde7d4720a4b187a2f808ca61/files/thumbnail_5cb38467-bedd-4964-b813-9b4a28058011.png.256x256_q85_crop-%2C.png",
+]
+    var allBlocks = [{imgID: 1}]
+    var rollBlocks = rollBlocks();
+
+    //COMMON FUNCTIONS
+
+    //put this on timer on setTimeouts, and it will repeat that function numberOfRepeats amount of times with a wait of repeatTime
+    function timer(callFunction,numberOfRepeats,repeatTime) {
+        for (var i = 0; i < numberOfRepeats; i++) {
+            setTimeout(callFunction,repeatTime * i);
+        }
+    }
+
+    //ACTIONS
+    document.getElementById("roll").onclick = function() {
+        currentBlocks.sort(() => Math.random() - 0.5)
+        timer(rollBlocks(),25,100)
+    }
+    function rollBlocks() {
+        console.log("working i guess")
+    }
+</script>
