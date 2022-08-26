@@ -33,7 +33,7 @@ $(document).ready(function () {
   // This line sets the initial display
   resetDisplay();
 
-// TO DO 0 COMPLETED
+// TO DO 0 complete
   // ALL OF YOUR CODE SHOULD GO BELOW HERE ////////
   /////////////////////////////////////////////////
 
