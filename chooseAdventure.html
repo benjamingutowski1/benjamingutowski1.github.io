@@ -1,0 +1,51 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <style>
+        #happening {
+            border-style: solid;
+            border-width: 2px;
+            position: absolute;
+            top: 20px;
+        }
+
+        .noselect {
+            -webkit-touch-callout: none;
+            /* iOS Safari */
+            -webkit-user-select: none;
+            /* Safari */
+            -khtml-user-select: none;
+            /* Konqueror HTML */
+            -moz-user-select: none;
+            /* Firefox */
+            -ms-user-select: none;
+            /* Internet Explorer/Edge */
+            user-select: none;
+            /* Non-prefixed version, currently
+                supported by Chrome and Opera */
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="happening" class="noselect" height="500" width="500"> </canvas>
+</body>
+
+</html>
+<script>
+    //PAGE SETUP
+    var happeningBox = document.getElementById("happening");
+    shiftMiddle(happening, 500);
+
+    //shifts an html element to the middle of the screen. The position must be set to absolute;
+    function shiftMiddle(element, width) {
+        element.style.left = (window.innerWidth / 2 - (width / 2)) + "px";
+    }
+    //VAR SETUP
+    var happenings = [
+        "sup"
+    ]
+    var happeningIndex = 0;
+
+</script>
