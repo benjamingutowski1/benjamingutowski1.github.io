@@ -23,6 +23,11 @@
 <script>
     var canvas = document.getElementById("canvas");
     var ctx = canvas.getContext("2d");
+    var columnDistance = 10;
+    var min = 0;
+    var max = 99;
+    var start = 5;
+    var end = 95
     canvas.addEventListener("mousemove", mouseCordsSet)
     canvas.addEventListener("mousedown", mouseDown)
     canvas.addEventListener("mouseup", mouseUp)
@@ -81,7 +86,31 @@
 
 
     function solveRecursivly() {
-        var start = 5;
+        solve(start);
+    }
+    
+    function solve(index) {
+        //check
+        if (index === end) {
+            alert("found");
+            return;
+        }
+        //left
+        if (gridArray[index - 1] === 1 && (index - (index % 4))/4 === ((index-1)-((index-1)%4))/4) {
+            solve(index - 1);
+        }
+        //up
+        if (gridArray[index - columnDistance] === 1 && index > min - 1 && index <= max) {
+            solve(index - columnDistance);
+        }
+        //right
+        if (gridArray[index + 1] && (index - (index % 4))/4 === ((index+1)-((index+1)%4))/4) {
+            solve(index + 1);
+        }
+        //down
+        if (gridArray[index + columnDistance] === 1 && index > min - 1 && index <= max) {
+            solve(index + columnDistance);
+        }
     }
 
     function animateRobotSolvingMaze() {
