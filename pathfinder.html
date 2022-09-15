@@ -27,7 +27,12 @@
     var min = 0;
     var max = 99;
     var start = 5;
+    var found = 0;
     var end = 95
+    var minStepsIndex = 0;
+    var minSteps = 99999999999;
+    var been = [[start]];
+    var startOrder = ["left", "right", "down"]
     canvas.addEventListener("mousemove", mouseCordsSet)
     canvas.addEventListener("mousedown", mouseDown)
     canvas.addEventListener("mouseup", mouseUp)
@@ -86,32 +91,88 @@
 
 
     function solveRecursivly() {
-        solve(start);
+        solve(start, 0, 0);
+        createGrid();
+        for (var i = 0; i < been[minStepsIndex].length; i++) {
+            gridArray[been[minStepsIndex][i]] = 4;
+        }
     }
-    
-    function solve(index) {
+
+    function solve(index, oldBeenIndex) {
         //check
-        if (index === end) {
-            alert("found");
+        if (index === end && been[oldBeenIndex].length < minSteps) {
+            minSteps = been[oldBeenIndex].length;
+            minStepsIndex = oldBeenIndex;
             return;
         }
+        var currentBeenArray = [];
+        for (var i = 0; i < been[oldBeenIndex].length; i++) {
+            currentBeenArray.push(been[oldBeenIndex][i]);
+        }
+        var currentBeenIndex = been.length;
+        been.push(currentBeenArray);
         //left
-        if (gridArray[index - 1] === 1 && (index - (index % 4))/4 === ((index-1)-((index-1)%4))/4) {
-            solve(index - 1);
+        if (currentBeenArray.includes(index - 1) === false && gridArray[index - 1] !== 0 && (index - (index % 10)) / 10 === ((index - 1) - ((index - 1) % 10)) / 10) {
+            currentBeenArray.push(index - 1)
+            replaceBeen(currentBeenArray,currentBeenIndex)
+            setTimeout(solve(index - 1, currentBeenIndex), 1000)
         }
         //up
-        if (gridArray[index - columnDistance] === 1 && index > min - 1 && index <= max) {
-            solve(index - columnDistance);
+        if (currentBeenArray.includes(index - columnDistance) === false && gridArray[index - columnDistance] !== 0 && index > min - 1 && index <= max) {
+            currentBeenArray.push(index - columnDistance)
+            replaceBeen(currentBeenArray,currentBeenIndex)
+            setTimeout(solve(index - columnDistance, currentBeenIndex), 1000)
         }
         //right
-        if (gridArray[index + 1] && (index - (index % 4))/4 === ((index+1)-((index+1)%4))/4) {
-            solve(index + 1);
+        if (currentBeenArray.includes(index + 1) === false && gridArray[index + 1] !== 0 && (index - (index % 10)) / 10 === ((index + 1) - ((index + 1) % 10)) / 10) {
+            currentBeenArray.push(index + 1)
+            replaceBeen(currentBeenArray,currentBeenIndex)
+            setTimeout(solve(index + 1, currentBeenIndex), 1000)
         }
         //down
-        if (gridArray[index + columnDistance] === 1 && index > min - 1 && index <= max) {
-            solve(index + columnDistance);
+        if (currentBeenArray.includes(index + columnDistance) === false && gridArray[index + columnDistance] !== 0 && index > min - 1 && index <= max) {
+            currentBeenArray.push(index + columnDistance)
+            replaceBeen(currentBeenArray,currentBeenIndex)
+            setTimeout(solve(index + columnDistance, currentBeenIndex), 1000)
         }
     }
+    function replaceBeen(newArray,beenIndex) {
+        been[beenIndex] = [];
+        for (var j = 0; j < newArray.length; j++) {
+            been[beenIndex].push(newArray[j]);
+        }
+    }
+
+    /*function solve(index,order) {
+        //check
+        if (index === end || found === 1) {
+            if (found === 0) {
+                alert("found");
+                found = 1;
+            }
+            return;
+        }
+        gridArray[index] = 4
+        createGrid()
+        for (var i = 0; i < order.length; i++) {
+            //left
+            if (order[i] === "left" && gridArray[index - 1] !== 0 && (index - (index % 10))/10 === ((index-1)-((index-1)%10))/10) {
+                setTimeout(solve(index - 1, ["down","up","left"]),1000)
+            }
+            //up
+            if (order[i] === "up" && gridArray[index - columnDistance] !== 0 && index > min - 1 && index <= max) {
+                setTimeout(solve(index - columnDistance, ["left","right","up"]),1000)
+            }
+            //right
+            if (order[i] === "right" && gridArray[index + 1] !== 0 && (index - (index % 10))/10 === ((index+1)-((index+1)%10))/10) {
+                setTimeout(solve(index + 1, ["up","down","right"]),1000)
+            }
+            //down
+            if (order[i] === "down" && gridArray[index + columnDistance] !== 0 && index > min - 1 && index <= max) {
+                setTimeout(solve(index + columnDistance, ["right","left","down"]),1000)
+            }
+        }
+    } */
 
     function animateRobotSolvingMaze() {
 
@@ -214,6 +275,7 @@
     function loadGridJson() {
         var files = document.getElementById('selectFiles').files;
         var fr = new FileReader();
+        var found = 0;
         fr.readAsText(files[0])
         fr.addEventListener("load", () => { //you have to do this really dumb thing because you have to wait for the file reader to finish before you can use the result.
             // this will then display a text file
