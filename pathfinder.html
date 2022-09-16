@@ -107,42 +107,47 @@
         }
         var currentBeenArray = [];
         var indexAdded;
+        var previouslyChecked = [];
         for (var i = 0; i < been[oldBeenIndex].length; i++) {
             currentBeenArray.push(been[oldBeenIndex][i]);
         }
         var currentBeenIndex = been.length;
         been.push(currentBeenArray);
         //left
-        if (currentBeenArray.includes(index - 1) === false && gridArray[index - 1] !== 0 && (index - (index % 10)) / 10 === ((index - 1) - ((index - 1) % 10)) / 10) {
+        if (previouslyChecked.includes(index - 1) === false && currentBeenArray.includes(index - 1) === false && gridArray[index - 1] !== 0 && (index - (index % 10)) / 10 === ((index - 1) - ((index - 1) % 10)) / 10) {
             currentBeenArray.push(index - 1)
             indexAdded = index - 1
+            previouslyChecked.push(index - 1)
             replaceBeen(currentBeenArray,currentBeenIndex)
             setTimeout(solve(index - 1, currentBeenIndex), 1000)
             removeFromCurrentBeenArray(indexAdded,currentBeenIndex)
             currentBeenArray.splice(currentBeenArray.length - 1, 1)
         }
         //up
-        if (currentBeenArray.includes(index - columnDistance) === false && gridArray[index - columnDistance] !== 0 && index > min - 1 && index <= max) {
+        if (previouslyChecked.includes(index - columnDistance) === false && currentBeenArray.includes(index - columnDistance) === false && gridArray[index - columnDistance] !== 0 && index > min - 1 && index <= max) {
             currentBeenArray.push(index - columnDistance)
             indexAdded = index - columnDistance
+            previouslyChecked.push(index - columnDistance)
             replaceBeen(currentBeenArray,currentBeenIndex)
             setTimeout(solve(index - columnDistance, currentBeenIndex), 1000)
             removeFromCurrentBeenArray(indexAdded,currentBeenIndex)
             currentBeenArray.splice(currentBeenArray.length - 1, 1)
         }
         //right
-        if (currentBeenArray.includes(index + 1) === false && gridArray[index + 1] !== 0 && (index - (index % 10)) / 10 === ((index + 1) - ((index + 1) % 10)) / 10) {
+        if (previouslyChecked.includes(index + 1) === false && currentBeenArray.includes(index + 1) === false && gridArray[index + 1] !== 0 && (index - (index % 10)) / 10 === ((index + 1) - ((index + 1) % 10)) / 10) {
             currentBeenArray.push(index + 1)
             indexAdded = index + 1
+            previouslyChecked.push(index + 1)
             replaceBeen(currentBeenArray,currentBeenIndex)
             setTimeout(solve(index + 1, currentBeenIndex), 1000)
             removeFromCurrentBeenArray(indexAdded,currentBeenIndex)
             currentBeenArray.splice(currentBeenArray.length - 1, 1)
         }
         //down
-        if (currentBeenArray.includes(index + columnDistance) === false && gridArray[index + columnDistance] !== 0 && index > min - 1 && index <= max) {
+        if (previouslyChecked.includes(index + columnDistance) === false && currentBeenArray.includes(index + columnDistance) === false && gridArray[index + columnDistance] !== 0 && index > min - 1 && index <= max) {
             currentBeenArray.push(index + columnDistance)
             indexAdded = index + columnDistance
+            previouslyChecked.push(index + columnDistance)
             replaceBeen(currentBeenArray,currentBeenIndex)
             setTimeout(solve(index + columnDistance, currentBeenIndex), 1000)
             removeFromCurrentBeenArray(indexAdded,currentBeenIndex)
