@@ -106,6 +106,7 @@
             return;
         }
         var currentBeenArray = [];
+        var indexAdded;
         for (var i = 0; i < been[oldBeenIndex].length; i++) {
             currentBeenArray.push(been[oldBeenIndex][i]);
         }
@@ -114,28 +115,49 @@
         //left
         if (currentBeenArray.includes(index - 1) === false && gridArray[index - 1] !== 0 && (index - (index % 10)) / 10 === ((index - 1) - ((index - 1) % 10)) / 10) {
             currentBeenArray.push(index - 1)
+            indexAdded = index - 1
             replaceBeen(currentBeenArray,currentBeenIndex)
             setTimeout(solve(index - 1, currentBeenIndex), 1000)
+            removeFromCurrentBeenArray(indexAdded,currentBeenIndex)
+            currentBeenArray.splice(currentBeenArray.length - 1, 1)
         }
         //up
         if (currentBeenArray.includes(index - columnDistance) === false && gridArray[index - columnDistance] !== 0 && index > min - 1 && index <= max) {
             currentBeenArray.push(index - columnDistance)
+            indexAdded = index - columnDistance
             replaceBeen(currentBeenArray,currentBeenIndex)
             setTimeout(solve(index - columnDistance, currentBeenIndex), 1000)
+            removeFromCurrentBeenArray(indexAdded,currentBeenIndex)
+            currentBeenArray.splice(currentBeenArray.length - 1, 1)
         }
         //right
         if (currentBeenArray.includes(index + 1) === false && gridArray[index + 1] !== 0 && (index - (index % 10)) / 10 === ((index + 1) - ((index + 1) % 10)) / 10) {
             currentBeenArray.push(index + 1)
+            indexAdded = index + 1
             replaceBeen(currentBeenArray,currentBeenIndex)
             setTimeout(solve(index + 1, currentBeenIndex), 1000)
+            removeFromCurrentBeenArray(indexAdded,currentBeenIndex)
+            currentBeenArray.splice(currentBeenArray.length - 1, 1)
         }
         //down
         if (currentBeenArray.includes(index + columnDistance) === false && gridArray[index + columnDistance] !== 0 && index > min - 1 && index <= max) {
             currentBeenArray.push(index + columnDistance)
+            indexAdded = index + columnDistance
             replaceBeen(currentBeenArray,currentBeenIndex)
             setTimeout(solve(index + columnDistance, currentBeenIndex), 1000)
+            removeFromCurrentBeenArray(indexAdded,currentBeenIndex)
+            currentBeenArray.splice(currentBeenArray.length - 1, 1)
         }
     }
+
+    function removeFromCurrentBeenArray(toRemove,beenIndex) {
+        for (var j = 0; j < been[beenIndex].length; j++) {
+            if (been[beenIndex][j] === toRemove) {
+                been[beenIndex].splice(j, 1);
+            }
+        }
+    }
+
     function replaceBeen(newArray,beenIndex) {
         been[beenIndex] = [];
         for (var j = 0; j < newArray.length; j++) {
