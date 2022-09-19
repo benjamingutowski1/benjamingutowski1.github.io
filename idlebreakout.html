@@ -1,0 +1,64 @@
+<!DOCTYPE HTML>
+<html>
+    <head>
+        <style>
+        #canvas {
+            border-style: solid;
+            border-width: 2px;
+        }
+        </style>
+    </head>
+    <body>
+        <canvas id="canvas" height="1000" width="1000"> </canvas>
+    </body>
+</html>
+<script>
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext("2d");
+    canvas.height = window.innerHeight - 25;
+    canvas.width = window.innerWidth - 25;
+
+    //circle properties
+    var numberOfCircles = 50;
+    var speed = 1;
+    var radius = 5;
+
+    //setting starter vars for circles
+    var circles = [];
+    for (var i = 0; i < numberOfCircles; i++) {
+        var thisCircleSpeedX = Math.floor(Math.random() * 2);
+        var thisCircleSpeedY = Math.floor(Math.random() * 2);
+            if (thisCircleSpeedX === 1) {
+                thisCircleSpeedX = speed;
+            } else {
+                thisCircleSpeedX = speed * -1;
+            }
+            if (thisCircleSpeedY === 1) {
+                thisCircleSpeedY = speed;
+            } else {
+                thisCircleSpeedY = speed * -1;
+            }
+        circles[i] = {
+            posx: (Math.floor(Math.random() * (window.innerWidth - 75)))+ 25,
+            posy: (Math.floor(Math.random() * (window.innerHeight - 75)))+ 25,
+            speedX: thisCircleSpeedX,
+            speedY: thisCircleSpeedY,
+        }
+    }
+
+    //canvas display
+    var canvasDisplay = setInterval(main,10);
+    function main() {
+        ctx.clearRect(0,0,1000000,1000000);
+        for (var i = 0; i < circles.length; i++) {
+            circles[i].posx += circles[i].speedX;
+            circles[i].posy += circles[i].speedY;
+            if (circles[i].posy >= window.innerHeight-25) {
+                circles[i].speedY = speed * -1;
+            }
+            ctx.beginPath();
+            ctx.arc(circles[i].posx, circles[i].posy, radius, 0, 2*Math.PI);
+            ctx.fill();
+        }
+    }
+</script>
