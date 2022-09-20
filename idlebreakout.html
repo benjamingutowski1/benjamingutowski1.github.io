@@ -1,16 +1,19 @@
 <!DOCTYPE HTML>
 <html>
-    <head>
-        <style>
+
+<head>
+    <style>
         #canvas {
             border-style: solid;
             border-width: 2px;
         }
-        </style>
-    </head>
-    <body>
-        <canvas id="canvas" height="1000" width="1000"> </canvas>
-    </body>
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas" height="1000" width="1000"> </canvas>
+</body>
+
 </html>
 <script>
     var canvas = document.getElementById("canvas");
@@ -22,43 +25,96 @@
     var numberOfCircles = 50;
     var speed = 1;
     var radius = 5;
+    var intervalFrequency = 5;
+    var numberOfGridRows = 5;
+    var numberOfGridColumns = 5;
+    var blockHeight = 10;
+    var blockWidth = 20;
+    var blockWidthGap = 10;
+    var blockHeightGap = 10;
+    var blockHealth = 1;
 
     //setting starter vars for circles
     var circles = [];
     for (var i = 0; i < numberOfCircles; i++) {
         var thisCircleSpeedX = Math.floor(Math.random() * 2);
         var thisCircleSpeedY = Math.floor(Math.random() * 2);
-            if (thisCircleSpeedX === 1) {
-                thisCircleSpeedX = speed;
-            } else {
-                thisCircleSpeedX = speed * -1;
-            }
-            if (thisCircleSpeedY === 1) {
-                thisCircleSpeedY = speed;
-            } else {
-                thisCircleSpeedY = speed * -1;
-            }
+        if (thisCircleSpeedX === 1) {
+            thisCircleSpeedX = speed;
+        } else {
+            thisCircleSpeedX = speed * -1;
+        }
+        if (thisCircleSpeedY === 1) {
+            thisCircleSpeedY = speed;
+        } else {
+            thisCircleSpeedY = speed * -1;
+        }
         circles[i] = {
-            posx: (Math.floor(Math.random() * (window.innerWidth - 75)))+ 25,
-            posy: (Math.floor(Math.random() * (window.innerHeight - 75)))+ 25,
+            posx: (Math.floor(Math.random() * (window.innerWidth - 75))) + 25,
+            posy: (Math.floor(Math.random() * (window.innerHeight - 75))) + 25,
             speedX: thisCircleSpeedX,
             speedY: thisCircleSpeedY,
         }
     }
 
+    //setting starter vars grid
+    var blocks = [];
+    var totalBlockWidth = numberOfGridColumns * (blockWidth + blockWidthGap);
+    var totalBlockHeight = numberOfGridColumns * (blockHeight + blockHeightGap);
+    var startingX = window.innerWidth / 2 - (totalBlockWidth / 2);
+    var startingY = window.innerHeight / 2 - (totalBlockHeight / 2)
+    for (var i = 0; i < numberOfGridRows; i++) {
+        for (var j = 0; j < numberOfGridColumns; j++) {
+            blocks.push({
+                posx: j * (blockWidth + blockWidthGap) + startingX,
+                posy: i * (blockHeight + blockHeightGap) + startingY,
+                height: blockHeight,
+                width: blockWidth,
+                health: blockHealth
+            })
+        }
+    }
+
+
     //canvas display
-    var canvasDisplay = setInterval(main,10);
+    var canvasDisplay = setInterval(main, intervalFrequency);
+
+    function wallCollisionCheck(index) {
+        if (circles[index].posy + radius >= window.innerHeight - 25) {
+            circles[index].speedY = speed * -1;
+        }
+        if (circles[index].posx + radius >= window.innerWidth - 25) {
+            circles[index].speedX = speed * -1;
+        }
+        if (circles[index].posx - radius <= 0) {
+            circles[index].speedX = speed;
+        }
+        if (circles[index].posy - radius <= 0) {
+            circles[index].speedY = speed;
+        }
+    }
+    function blockVerticalCollisionCheck(index) {
+        for (var j = 0; j < blocks.length; j++) {
+            if (circles[index].posx >= blocks[i].posx && circles[index].posx <= blocks[i].posx + blocks[i].width && circles[index].posy >= blocks[i].posy && circles[index].posy <= blocks[i].posy + blocks[i].height) {
+                circles[index].speedX = circles[index].speedX * -1;
+                alert("collided");
+            }
+        }
+    }
+
     function main() {
-        ctx.clearRect(0,0,1000000,1000000);
+        ctx.clearRect(0, 0, 1000000, 1000000);
         for (var i = 0; i < circles.length; i++) {
             circles[i].posx += circles[i].speedX;
+            blockVerticalCollisionCheck(i);
             circles[i].posy += circles[i].speedY;
-            if (circles[i].posy >= window.innerHeight-25) {
-                circles[i].speedY = speed * -1;
-            }
+            wallCollisionCheck(i);
             ctx.beginPath();
-            ctx.arc(circles[i].posx, circles[i].posy, radius, 0, 2*Math.PI);
+            ctx.arc(circles[i].posx, circles[i].posy, radius, 0, 2 * Math.PI);
             ctx.fill();
+        }
+        for (var i = 0; i < blocks.length; i++) {
+            ctx.fillRect(blocks[i].posx,blocks[i].posy,blocks[i].width,blocks[i].height)
         }
     }
 </script>
