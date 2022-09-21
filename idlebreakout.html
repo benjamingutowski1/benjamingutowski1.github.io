@@ -22,17 +22,36 @@
     canvas.width = window.innerWidth - 25;
 
     //circle properties
-    var numberOfCircles = 50;
-    var speed = 1;
+    var numberOfCircles = 300;
+    var speed = 5;
     var radius = 5;
     var intervalFrequency = 5;
-    var numberOfGridRows = 5;
-    var numberOfGridColumns = 5;
-    var blockHeight = 10;
+    var numberOfGridRows = 15;
+    var numberOfGridColumns = 15;
+    var blockHeight = 15;
     var blockWidth = 20;
     var blockWidthGap = 10;
     var blockHeightGap = 10;
-    var blockHealth = 1;
+    var blockHealth = 10;
+    var circleDamage = 1;
+
+    //setting starter vars grid
+    var blocks = [];
+    var totalBlockWidth = numberOfGridColumns * (blockWidth + blockWidthGap);
+    var totalBlockHeight = numberOfGridColumns * (blockHeight + blockHeightGap);
+    var startingX = window.innerWidth / 2 - (totalBlockWidth / 2);
+    var startingY = window.innerHeight / 2 - (totalBlockHeight / 2)
+    for (var i = 0; i < numberOfGridRows; i++) {
+        for (var j = 0; j < numberOfGridColumns; j++) {
+            blocks.push({
+                posx: j * (blockWidth + blockWidthGap) + startingX,
+                posy: i * (blockHeight + blockHeightGap) + startingY,
+                height: blockHeight,
+                width: blockWidth,
+                health: blockHealth
+            })
+        }
+    }
 
     //setting starter vars for circles
     var circles = [];
@@ -55,26 +74,11 @@
             speedX: thisCircleSpeedX,
             speedY: thisCircleSpeedY,
         }
-    }
-
-    //setting starter vars grid
-    var blocks = [];
-    var totalBlockWidth = numberOfGridColumns * (blockWidth + blockWidthGap);
-    var totalBlockHeight = numberOfGridColumns * (blockHeight + blockHeightGap);
-    var startingX = window.innerWidth / 2 - (totalBlockWidth / 2);
-    var startingY = window.innerHeight / 2 - (totalBlockHeight / 2)
-    for (var i = 0; i < numberOfGridRows; i++) {
-        for (var j = 0; j < numberOfGridColumns; j++) {
-            blocks.push({
-                posx: j * (blockWidth + blockWidthGap) + startingX,
-                posy: i * (blockHeight + blockHeightGap) + startingY,
-                height: blockHeight,
-                width: blockWidth,
-                health: blockHealth
-            })
+        while (circles[i].posx >= startingX && circles[i].posx <= startingX + totalBlockWidth && circles[i].posy >= startingY && circles[i].posy <= startingY + totalBlockHeight) {
+            circles[i].posx = (Math.floor(Math.random() * (window.innerWidth - 75))) + 25;
+            circles[i].posy = (Math.floor(Math.random() * (window.innerHeight - 75))) + 25;
         }
     }
-
 
     //canvas display
     var canvasDisplay = setInterval(main, intervalFrequency);
@@ -93,28 +97,49 @@
             circles[index].speedY = speed;
         }
     }
-    function blockVerticalCollisionCheck(index) {
+    function blockVerticalCollisionCheck(index,oldXPos,oldYPos) {
         for (var j = 0; j < blocks.length; j++) {
-            if (circles[index].posx >= blocks[i].posx && circles[index].posx <= blocks[i].posx + blocks[i].width && circles[index].posy >= blocks[i].posy && circles[index].posy <= blocks[i].posy + blocks[i].height) {
+            if (circles[index].posx + radius >= blocks[j].posx && circles[index].posx - radius <= blocks[j].posx + blocks[j].width && circles[index].posy + radius >= blocks[j].posy && circles[index].posy - radius <= blocks[j].posy + blocks[j].height) {
                 circles[index].speedX = circles[index].speedX * -1;
-                alert("collided");
+                circles[index].posx = oldXPos;
+                blockHealthDown(j);
             }
         }
     }
+    function blockHorizontalCollisionCheck(index,oldXPos,oldYPos) {
+        for (var j = 0; j < blocks.length; j++) {
+            if (circles[index].posx + radius >= blocks[j].posx && circles[index].posx - radius <= blocks[j].posx + blocks[j].width && circles[index].posy + radius >= blocks[j].posy && circles[index].posy - radius <= blocks[j].posy + blocks[j].height) {
+                circles[index].speedY = circles[index].speedY * -1;
+                circles[index].posy = oldYPos;
+                blockHealthDown(j);
+            }
+        }
+    }
+    function blockHealthDown(blockIndex) {
+        blocks[blockIndex].health -= circleDamage;
 
+        if (blocks[blockIndex].health <= 0) {
+            blocks.splice(blockIndex, 1);
+        }
+    }
     function main() {
         ctx.clearRect(0, 0, 1000000, 1000000);
+        ctx.fillStyle = "black"
         for (var i = 0; i < circles.length; i++) {
+            var safeXPos = circles[i].posx;
+            var safeYPos = circles[i].posy;
             circles[i].posx += circles[i].speedX;
-            blockVerticalCollisionCheck(i);
+            blockVerticalCollisionCheck(i,safeXPos,safeYPos);
             circles[i].posy += circles[i].speedY;
+            blockHorizontalCollisionCheck(i,safeXPos,safeYPos);
             wallCollisionCheck(i);
             ctx.beginPath();
             ctx.arc(circles[i].posx, circles[i].posy, radius, 0, 2 * Math.PI);
             ctx.fill();
         }
         for (var i = 0; i < blocks.length; i++) {
-            ctx.fillRect(blocks[i].posx,blocks[i].posy,blocks[i].width,blocks[i].height)
+            ctx.fillStyle = "rgb(" + (256 - (256 * (blocks[i].health / blockHealth))) + ", 0, 0)"
+            ctx.fillRect(blocks[i].posx, blocks[i].posy, blocks[i].width, blocks[i].height)
         }
     }
 </script>
