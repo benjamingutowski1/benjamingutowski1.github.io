@@ -22,17 +22,17 @@
     canvas.width = window.innerWidth - 25;
 
     //circle properties
-    var numberOfCircles = 300;
+    var numberOfCircles = 500;
     var speed = 5;
-    var radius = 5;
+    var radius = 3;
     var intervalFrequency = 5;
-    var numberOfGridRows = 15;
-    var numberOfGridColumns = 15;
-    var blockHeight = 15;
-    var blockWidth = 20;
-    var blockWidthGap = 10;
-    var blockHeightGap = 10;
-    var blockHealth = 10;
+    var numberOfGridRows = 3;
+    var numberOfGridColumns = 3;
+    var blockHeight = 100;
+    var blockWidth = 100;
+    var blockWidthGap = 20;
+    var blockHeightGap = 20;
+    var blockHealth = 10000;
     var circleDamage = 1;
 
     //setting starter vars grid
@@ -84,10 +84,10 @@
     var canvasDisplay = setInterval(main, intervalFrequency);
 
     function wallCollisionCheck(index) {
-        if (circles[index].posy + radius >= window.innerHeight - 25) {
+        if (circles[index].posy + radius >= canvas.height) {
             circles[index].speedY = speed * -1;
         }
-        if (circles[index].posx + radius >= window.innerWidth - 25) {
+        if (circles[index].posx + radius >= canvas.width) {
             circles[index].speedX = speed * -1;
         }
         if (circles[index].posx - radius <= 0) {
@@ -97,18 +97,24 @@
             circles[index].speedY = speed;
         }
     }
-    function blockVerticalCollisionCheck(index,oldXPos,oldYPos) {
+    function blockVerticalCollisionCheck(index, oldXPos, oldYPos) {
         for (var j = 0; j < blocks.length; j++) {
-            if (circles[index].posx + radius >= blocks[j].posx && circles[index].posx - radius <= blocks[j].posx + blocks[j].width && circles[index].posy + radius >= blocks[j].posy && circles[index].posy - radius <= blocks[j].posy + blocks[j].height) {
+            if (circles[index].posx + radius >= blocks[j].posx &&
+                circles[index].posx - radius <= blocks[j].posx + blocks[j].width &&
+                circles[index].posy + radius >= blocks[j].posy &&
+                circles[index].posy - radius <= blocks[j].posy + blocks[j].height) {
                 circles[index].speedX = circles[index].speedX * -1;
                 circles[index].posx = oldXPos;
                 blockHealthDown(j);
             }
         }
     }
-    function blockHorizontalCollisionCheck(index,oldXPos,oldYPos) {
+    function blockHorizontalCollisionCheck(index, oldXPos, oldYPos) {
         for (var j = 0; j < blocks.length; j++) {
-            if (circles[index].posx + radius >= blocks[j].posx && circles[index].posx - radius <= blocks[j].posx + blocks[j].width && circles[index].posy + radius >= blocks[j].posy && circles[index].posy - radius <= blocks[j].posy + blocks[j].height) {
+            if (circles[index].posx + radius >= blocks[j].posx &&
+                circles[index].posx - radius <= blocks[j].posx + blocks[j].width &&
+                circles[index].posy + radius >= blocks[j].posy &&
+                circles[index].posy - radius <= blocks[j].posy + blocks[j].height) {
                 circles[index].speedY = circles[index].speedY * -1;
                 circles[index].posy = oldYPos;
                 blockHealthDown(j);
@@ -129,9 +135,9 @@
             var safeXPos = circles[i].posx;
             var safeYPos = circles[i].posy;
             circles[i].posx += circles[i].speedX;
-            blockVerticalCollisionCheck(i,safeXPos,safeYPos);
+            blockVerticalCollisionCheck(i, safeXPos, safeYPos);
             circles[i].posy += circles[i].speedY;
-            blockHorizontalCollisionCheck(i,safeXPos,safeYPos);
+            blockHorizontalCollisionCheck(i, safeXPos, safeYPos);
             wallCollisionCheck(i);
             ctx.beginPath();
             ctx.arc(circles[i].posx, circles[i].posy, radius, 0, 2 * Math.PI);
