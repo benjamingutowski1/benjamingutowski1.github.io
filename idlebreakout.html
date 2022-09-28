@@ -22,7 +22,7 @@
     canvas.width = window.innerWidth - 25;
 
     //circle properties
-    var numberOfCircles = 500;
+    var numberOfStartingCircles = 500;
     var speed = 5;
     var radius = 3;
     var intervalFrequency = 5;
@@ -33,14 +33,19 @@
     var blockWidthGap = 20;
     var blockHeightGap = 20;
     var blockHealth = 10000;
+    var menuHeight = 100;
     var circleDamage = 1;
+    var menuContents = [{ posx: 1, posy: 1, height: 90, width: 90, text: ["create", "ball"], background_color: "#ffffff", text_color: "#000000", font_size: 30, id: 1}];
+
+    //magic numbers for boxClicks
+    var createBallsBox = 1;
 
     //setting starter vars grid
     var blocks = [];
     var totalBlockWidth = numberOfGridColumns * (blockWidth + blockWidthGap);
     var totalBlockHeight = numberOfGridColumns * (blockHeight + blockHeightGap);
     var startingX = window.innerWidth / 2 - (totalBlockWidth / 2);
-    var startingY = window.innerHeight / 2 - (totalBlockHeight / 2)
+    var startingY = window.innerHeight / 2 - (totalBlockHeight / 2) + (menuHeight / 2);
     for (var i = 0; i < numberOfGridRows; i++) {
         for (var j = 0; j < numberOfGridColumns; j++) {
             blocks.push({
@@ -55,7 +60,7 @@
 
     //setting starter vars for circles
     var circles = [];
-    for (var i = 0; i < numberOfCircles; i++) {
+    for (var i = 0; i < numberOfStartingCircles; i++) {
         var thisCircleSpeedX = Math.floor(Math.random() * 2);
         var thisCircleSpeedY = Math.floor(Math.random() * 2);
         if (thisCircleSpeedX === 1) {
@@ -70,19 +75,58 @@
         }
         circles[i] = {
             posx: (Math.floor(Math.random() * (window.innerWidth - 75))) + 25,
-            posy: (Math.floor(Math.random() * (window.innerHeight - 75))) + 25,
+            posy: (Math.floor(Math.random() * (window.innerHeight - 75 - menuHeight))) + 25 + menuHeight,
             speedX: thisCircleSpeedX,
             speedY: thisCircleSpeedY,
         }
         while (circles[i].posx >= startingX && circles[i].posx <= startingX + totalBlockWidth && circles[i].posy >= startingY && circles[i].posy <= startingY + totalBlockHeight) {
             circles[i].posx = (Math.floor(Math.random() * (window.innerWidth - 75))) + 25;
-            circles[i].posy = (Math.floor(Math.random() * (window.innerHeight - 75))) + 25;
+            circles[i].posy = (Math.floor(Math.random() * (window.innerHeight - 75 - menuHeight))) + 25 + menuHeight;
+        }
+    }
+    
+    //EVERYTHING clicking
+    document.getElementById("canvas").addEventListener("click", boxClickDetection);
+
+    function boxClickDetection(e) {
+        for (var i = 0; i < menuContents.length; i++) {
+            if (e.clientX >= menuContents[i].posx &&
+            e.clientX <= menuContents[i].posx + menuContents[i].width &&
+            e.clientY >= menuContents[i].posy &&
+            e.clientY <= menuContents[i].posy + menuContents[i].height) {
+                clickID(menuContents[i].id);
+            }
+        }
+    }
+    
+    //click ids and what they do
+    function clickID(clickedID) {
+        if (clickedID === createBallsBox) {
+            alert("create ball :)")
         }
     }
 
     //canvas display
     var canvasDisplay = setInterval(main, intervalFrequency);
 
+    //creates menu
+    function createMenu() {
+        ctx.fillStyle = "#000000";
+        ctx.fillRect(0, 0, window.innerWidth - 25, menuHeight);
+        for (var i = 0; i < menuContents.length; i++) {
+            ctx.fillStyle = menuContents[i].background_color;
+            ctx.fillRect(menuContents[i].posx, menuContents[i].posy, menuContents[i].width, menuContents[i].height);
+            var textXPos = menuContents[i].posx + 5;
+            var textYPos = menuContents[i].posy + 5;
+            ctx.fillStyle = menuContents[i].text_color;
+            ctx.font = menuContents[i].font_size + "px Arial"
+            for (var j = 0; j < menuContents[i].text.length; j++) {
+                ctx.fillText(menuContents[i].text[j], menuContents[i].posx + 5, menuContents[i].posy + ((j + 1) * (10 + menuContents[i].font_size)), menuContents[i].width - 10)
+            }
+        }
+    }
+
+    //checks wall collisions for circles
     function wallCollisionCheck(index) {
         if (circles[index].posy + radius >= canvas.height) {
             circles[index].speedY = speed * -1;
@@ -93,10 +137,12 @@
         if (circles[index].posx - radius <= 0) {
             circles[index].speedX = speed;
         }
-        if (circles[index].posy - radius <= 0) {
+        if (circles[index].posy - radius <= menuHeight) {
             circles[index].speedY = speed;
         }
     }
+
+    //checks after x position change
     function blockVerticalCollisionCheck(index, oldXPos, oldYPos) {
         for (var j = 0; j < blocks.length; j++) {
             if (circles[index].posx + radius >= blocks[j].posx &&
@@ -109,6 +155,8 @@
             }
         }
     }
+
+    //checks after y position change
     function blockHorizontalCollisionCheck(index, oldXPos, oldYPos) {
         for (var j = 0; j < blocks.length; j++) {
             if (circles[index].posx + radius >= blocks[j].posx &&
@@ -121,6 +169,8 @@
             }
         }
     }
+
+    //takes away health from a block
     function blockHealthDown(blockIndex) {
         blocks[blockIndex].health -= circleDamage;
 
@@ -128,8 +178,11 @@
             blocks.splice(blockIndex, 1);
         }
     }
+
+    //draws canvas
     function main() {
         ctx.clearRect(0, 0, 1000000, 1000000);
+        createMenu();
         ctx.fillStyle = "black"
         for (var i = 0; i < circles.length; i++) {
             var safeXPos = circles[i].posx;
