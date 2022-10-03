@@ -22,7 +22,7 @@
     canvas.width = window.innerWidth - 25;
 
     //circle properties
-    var numberOfStartingCircles = 500;
+    var numberOfCircles = 500;
     var speed = 5;
     var radius = 3;
     var intervalFrequency = 5;
@@ -32,73 +32,88 @@
     var blockWidth = 100;
     var blockWidthGap = 20;
     var blockHeightGap = 20;
-    var blockHealth = 10000;
+    var blockHealth = 1000;
     var menuHeight = 100;
-    var circleDamage = 1;
-    var menuContents = [{ posx: 1, posy: 1, height: 90, width: 90, text: ["create", "ball"], background_color: "#ffffff", text_color: "#000000", font_size: 30, id: 1}];
-
-    //magic numbers for boxClicks
-    var createBallsBox = 1;
-
-    //setting starter vars grid
     var blocks = [];
+    var circles = [];
+    var circleDamage = 1;
+    var menuContents = [{ posx: 1, posy: 1, height: 90, width: 90, text: ["create", "ball"], background_color: "#ffffff", text_color: "#000000", font_size: 30, id: 1 },
+    {posx: 93, posy: 1, height: 90, width: 90, text: ["Rimesies:", "customvardisplay_rimesies"], background_color: "#ffffff", text_color: "#000000", font_size: 20, id: 1001}];
+
     var totalBlockWidth = numberOfGridColumns * (blockWidth + blockWidthGap);
     var totalBlockHeight = numberOfGridColumns * (blockHeight + blockHeightGap);
     var startingX = window.innerWidth / 2 - (totalBlockWidth / 2);
     var startingY = window.innerHeight / 2 - (totalBlockHeight / 2) + (menuHeight / 2);
-    for (var i = 0; i < numberOfGridRows; i++) {
-        for (var j = 0; j < numberOfGridColumns; j++) {
-            blocks.push({
-                posx: j * (blockWidth + blockWidthGap) + startingX,
-                posy: i * (blockHeight + blockHeightGap) + startingY,
-                height: blockHeight,
-                width: blockWidth,
-                health: blockHealth
-            })
+
+    var rimesies = 0;
+
+    //magic numbers for boxClicks
+    var createBallsBox = 1;
+
+    //setting up grid
+    function createBlocksVars() {
+        for (var i = 0; i < numberOfGridRows; i++) {
+            for (var j = 0; j < numberOfGridColumns; j++) {
+                blocks.push({
+                    posx: j * (blockWidth + blockWidthGap) + startingX,
+                    posy: i * (blockHeight + blockHeightGap) + startingY,
+                    height: blockHeight,
+                    width: blockWidth,
+                    health: blockHealth
+                })
+            }
         }
     }
 
+    createBlocksVars();
+
     //setting starter vars for circles
-    var circles = [];
-    for (var i = 0; i < numberOfStartingCircles; i++) {
-        var thisCircleSpeedX = Math.floor(Math.random() * 2);
-        var thisCircleSpeedY = Math.floor(Math.random() * 2);
-        if (thisCircleSpeedX === 1) {
-            thisCircleSpeedX = speed;
-        } else {
+    function createCirclesVars() {
+        circles = [];
+        for (var i = 0; i < numberOfCircles; i++) {
+            addCircle(i);
+        }
+    }
+
+    createCirclesVars();
+
+    function addCircle(circleIndex) {
+        var thisCircleSpeedXRandom = Math.floor(Math.random() * 2);
+        var thisCircleSpeedYRandom = Math.floor(Math.random() * 2);
+        var thisCircleSpeedX = speed;
+        var thisCircleSpeedY = speed;
+        if (thisCircleSpeedXRandom === 1) {
             thisCircleSpeedX = speed * -1;
         }
-        if (thisCircleSpeedY === 1) {
-            thisCircleSpeedY = speed;
-        } else {
+        if (thisCircleSpeedYRandom === 1) {
             thisCircleSpeedY = speed * -1;
         }
-        circles[i] = {
+        circles[circleIndex] = {
             posx: (Math.floor(Math.random() * (window.innerWidth - 75))) + 25,
             posy: (Math.floor(Math.random() * (window.innerHeight - 75 - menuHeight))) + 25 + menuHeight,
             speedX: thisCircleSpeedX,
             speedY: thisCircleSpeedY,
         }
-        while (circles[i].posx >= startingX && circles[i].posx <= startingX + totalBlockWidth && circles[i].posy >= startingY && circles[i].posy <= startingY + totalBlockHeight) {
-            circles[i].posx = (Math.floor(Math.random() * (window.innerWidth - 75))) + 25;
-            circles[i].posy = (Math.floor(Math.random() * (window.innerHeight - 75 - menuHeight))) + 25 + menuHeight;
+        while (circles[circleIndex].posx >= startingX && circles[circleIndex].posx <= startingX + totalBlockWidth && circles[circleIndex].posy >= startingY && circles[circleIndex].posy <= startingY + totalBlockHeight) {
+            circles[circleIndex].posx = (Math.floor(Math.random() * (window.innerWidth - 75))) + 25;
+            circles[circleIndex].posy = (Math.floor(Math.random() * (window.innerHeight - 75 - menuHeight))) + 25 + menuHeight;
         }
     }
-    
+
     //EVERYTHING clicking
     document.getElementById("canvas").addEventListener("click", boxClickDetection);
 
     function boxClickDetection(e) {
         for (var i = 0; i < menuContents.length; i++) {
             if (e.clientX >= menuContents[i].posx &&
-            e.clientX <= menuContents[i].posx + menuContents[i].width &&
-            e.clientY >= menuContents[i].posy &&
-            e.clientY <= menuContents[i].posy + menuContents[i].height) {
+                e.clientX <= menuContents[i].posx + menuContents[i].width &&
+                e.clientY >= menuContents[i].posy &&
+                e.clientY <= menuContents[i].posy + menuContents[i].height) {
                 clickID(menuContents[i].id);
             }
         }
     }
-    
+
     //click ids and what they do
     function clickID(clickedID) {
         if (clickedID === createBallsBox) {
@@ -176,6 +191,10 @@
 
         if (blocks[blockIndex].health <= 0) {
             blocks.splice(blockIndex, 1);
+            if (blocks.length === 0) {
+                createBlocksVars();
+                createCirclesVars();
+            }
         }
     }
 
