@@ -136,8 +136,24 @@
             ctx.fillStyle = menuContents[i].text_color;
             ctx.font = menuContents[i].font_size + "px Arial"
             for (var j = 0; j < menuContents[i].text.length; j++) {
-                ctx.fillText(menuContents[i].text[j], menuContents[i].posx + 5, menuContents[i].posy + ((j + 1) * (10 + menuContents[i].font_size)), menuContents[i].width - 10)
+                var menuDisplayText = "";
+                var textSplit = menuContents[i].text[j].split(" ")
+                for (var k = 0; k < textSplit.length; k++) {
+                    if (textSplit[k].includes("customvardisplay")) {
+                        var customVarDisplayID = textSplit[k].split("_")[1];
+                        menuDisplayText = menuDisplayText + customVarDisplayIDs(customVarDisplayID) + " ";
+                    } else {
+                        menuDisplayText = menuDisplayText + textSplit[k] + " "
+                    }
+                }
+                ctx.fillText(menuDisplayText, menuContents[i].posx + 5, menuContents[i].posy + ((j + 1) * (10 + menuContents[i].font_size)), menuContents[i].width - 10)
             }
+        }
+    }
+
+    function customVarDisplayIDs(displayID) {
+        if (displayID === "rimesies") {
+            return rimesies;
         }
     }
 
@@ -191,6 +207,7 @@
 
         if (blocks[blockIndex].health <= 0) {
             blocks.splice(blockIndex, 1);
+            rimesies += 100;
             if (blocks.length === 0) {
                 createBlocksVars();
                 createCirclesVars();
