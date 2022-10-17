@@ -3,7 +3,7 @@ $(document).ready(function () {
   // SETUP SECTION - DO NOT TOUCH /////////////////
   /////////////////////////////////////////////////
 
-  // These lines register functionality with the different buttons
+  // These lines ister functionality with the different buttons
   $("#cycle-left").on("click", decrementIndex);
   $("#cycle-right").on("click", incrementIndex);
   $("#execute1").on("click", staticDisplay);
