@@ -16,6 +16,7 @@
 <body>
     <img id="duck" src="duck.jpg">
     <canvas id="canvas" width="300" height="300"></canvas>
+    <h1 id="button" onClick="buttonClick()"> change filter (click) </h1>
 
 </body>
 
@@ -28,37 +29,38 @@
 
         var canvas = document.getElementById("canvas")
         var ctx = canvas.getContext("2d")
-        var rgba = prompt("RGBA filter using syntax: 'r,g,b,a'","0,0,0,0");
-        rgba = rgba.split(",");
-        for (var i = 0; i < rgba.length; i++) {
-            rgba[i] = parseInt(rgba[i],1)
-        }
 
         var duck = document.getElementById("duck")
         ctx.drawImage(duck, 0, 0, 300, 300)
 
         var imageData = ctx.getImageData(0, 0, 300, 300)
         console.log(imageData)
+        
+        function buttonClick() {
+            var rgba = prompt("RGBA filter using syntax: 'r,g,b,a'", "0,0,0,0");
+            rgba = rgba.split(",");
+            for (var i = 0; i < rgba.length; i++) {
+                rgba[i] = parseInt(rgba[i], 10)
+            }
+            for (let i = 0; i < imageData.data.length; i = i + 4) {
+                imageData.data[i] = imageData.data[i] + rgba[0];
 
-        for (let i = 0; i < imageData.data.length; i = i+4) {
-            imageData.data[i] = imageData.data[i] + rgba[0];
-            
-        }
-        for (let i = 1; i < imageData.data.length; i = i+4) {
-            imageData.data[i] = imageData.data[i] + rgba[1];
-            
-        }
-        for (let i = 2; i < imageData.data.length; i = i+4) {
-            imageData.data[i] = imageData.data[i] + rgba[2];
-            
-        }
-        for (let i = 3; i < imageData.data.length; i = i+4) {
-            imageData.data[i] = imageData.data[i] + rgba[3];
-            
-        }
+            }
+            for (let i = 1; i < imageData.data.length; i = i + 4) {
+                imageData.data[i] = imageData.data[i] + rgba[1];
 
-        ctx.putImageData(imageData,0,0)
+            }
+            for (let i = 2; i < imageData.data.length; i = i + 4) {
+                imageData.data[i] = imageData.data[i] + rgba[2];
 
+            }
+            for (let i = 3; i < imageData.data.length; i = i + 4) {
+                imageData.data[i] = imageData.data[i] + rgba[3];
+
+            }
+
+            ctx.putImageData(imageData, 0, 0)
+        }
     }
 
 
