@@ -16,52 +16,76 @@
 <body>
     <img id="duck" src="duck.jpg">
     <canvas id="canvas" width="300" height="300"></canvas>
-    <h1 id="button" onClick="buttonClick()"> change filter (click) </h1>
+    <h1 id="button" onClick="buttonClick()"> update filter (click) </h1>
+    <input type="number" id="inputRed"> red </input> <br>
+    <input type="number" id="inputGreen"> green </input> <br>
+    <input type="number" id="inputBlue"> blue </input>
 
 </body>
 
 </html>
 <script>
 
+    var canvas;
+    var ctx;
+    var duck;
+    var imageData;
+    var rgb = [0,0,0];
+
+
     window.addEventListener("load", main);
 
     function main() {
 
-        var canvas = document.getElementById("canvas")
-        var ctx = canvas.getContext("2d")
+        canvas = document.getElementById("canvas")
+        ctx = canvas.getContext("2d")
 
-        var duck = document.getElementById("duck")
+        duck = document.getElementById("duck")
         ctx.drawImage(duck, 0, 0, 300, 300)
 
-        var imageData = ctx.getImageData(0, 0, 300, 300)
+        imageData = ctx.getImageData(0, 0, 300, 300);
         console.log(imageData)
-        
-        function buttonClick() {
-            var rgba = prompt("RGBA filter using syntax: 'r,g,b,a'", "0,0,0,0");
-            rgba = rgba.split(",");
-            for (var i = 0; i < rgba.length; i++) {
-                rgba[i] = parseInt(rgba[i], 10)
-            }
-            for (let i = 0; i < imageData.data.length; i = i + 4) {
-                imageData.data[i] = imageData.data[i] + rgba[0];
 
-            }
-            for (let i = 1; i < imageData.data.length; i = i + 4) {
-                imageData.data[i] = imageData.data[i] + rgba[1];
+        document.getElementById("inputRed").value = '0';
+        document.getElementById("inputGreen").value = '0';
+        document.getElementById("inputBlue").value = '0';
 
-            }
-            for (let i = 2; i < imageData.data.length; i = i + 4) {
-                imageData.data[i] = imageData.data[i] + rgba[2];
 
-            }
-            for (let i = 3; i < imageData.data.length; i = i + 4) {
-                imageData.data[i] = imageData.data[i] + rgba[3];
+    }
+    function buttonClick() {
+        getInputValues();
+        ctx.drawImage(duck, 0, 0, 300, 300)
+        imageData = ctx.getImageData(0, 0, 300, 300);
+        for (let i = 0; i < imageData.data.length; i = i + 4) {
+            imageData.data[i] = imageData.data[i] + rgb[0];
 
-            }
+        }
+        for (let i = 1; i < imageData.data.length; i = i + 4) {
+            imageData.data[i] = imageData.data[i] + rgb[1];
 
-            ctx.putImageData(imageData, 0, 0)
+        }
+        for (let i = 2; i < imageData.data.length; i = i + 4) {
+            imageData.data[i] = imageData.data[i] + rgb[2];
+
+        }
+
+        ctx.putImageData(imageData, 0, 0)
+    }
+    function getInputValues() {
+        rgb[0] = parseInt(document.getElementById("inputRed").value,10);
+        rgb[1] = parseInt(document.getElementById("inputGreen").value,10);
+        rgb[2] = parseInt(document.getElementById("inputBlue").value,10);
+        if (isNaN(rgb[0])) {
+            rgb[0] = 0;
+        }
+        if (isNaN(rgb[1])) {
+            rgb[1] = 0;
+        }
+        if (isNaN(rgb[2])) {
+            rgb[2] = 0;
         }
     }
+
 
 
 
