@@ -1,0 +1,92 @@
+<!DOCTYPE HTML>
+<html>
+
+<head>
+    <style>
+        #canvas {
+            border-style: solid;
+            border-width: 2px;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="canvas">
+</body>
+
+</html>
+<script>
+
+    //SETTING CANVAS VARS 
+
+    var canvas = document.getElementById("canvas");
+    var ctx = canvas.getContext('2d');
+
+    //CANVAS PARAMETERS
+
+    canvas.height = 500;
+    canvas.width = 1000;
+
+    //SETTING VARS
+
+    var speed = 5;
+    var ballRadius = 5;
+    var puckHeight = 100;
+    var goalWidth = 10;
+    var ball = {
+        x: 0,
+        y: 0,
+        speedX: 0,
+        speedY: 0,
+    }
+    var pucks = [];
+    for (var i = 0; i < 2; i++) {
+        pucks[i] = {
+            posy:0,
+            posx:0,
+        }
+    }
+    pucks[0].posx = 0;
+    pucks[1].posx = canvas.width - goalWidth;
+    
+
+    //GAME RELATED FUNCTIONS
+
+    //preps the vars for a new round
+    function newRound() {
+        var speedXChance = Math.floor(Math.random() * 2)
+        var speedYChance = Math.floor(Math.random() * 2)
+        ball.x = Math.ceil(canvas.width / 2);
+        ball.y = Math.ceil(canvas.height / 2);
+        ball.speedX = speed;
+        ball.speedY = speed;
+        if (speedXChance === 0) {
+            ball.speedX = speed * -1;
+        }
+        if (speedYChance === 0) {
+            ball.speedY = speed * -1;
+        }
+        for (var i = 0; i < 2; i++) {
+            pucks[i].posy = (Math.ceil(canvas.height / 2)) - Math.ceil(puckHeight / 2)
+        }
+    }
+
+    //CANVAS RELATED FUNCTIONS
+
+    //draws the board with the information currently given
+    function drawBoard() {
+        ctx.clearRect(0,0,100000,100000);
+        ctx.fillStyle = "red";
+        ctx.arc(ball.x,ball.y,ballRadius,0,2*Math.PI);
+        ctx.fill();
+        ctx.fillStyle = "black";
+        for (var i = 0; i < 2; i++) {
+            ctx.fillRect(pucks[i].posx, pucks[i].posy, goalWidth, puckHeight);
+        }
+
+    }
+
+    newRound();
+    drawBoard();
+
+</script>
