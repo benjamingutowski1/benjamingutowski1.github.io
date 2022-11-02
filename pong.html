@@ -7,15 +7,35 @@
             border-style: solid;
             border-width: 2px;
         }
+        #startGame {
+            height: 100px;
+            width: 200px;
+            font-size: 35px;
+            font-family:'Times New Roman', Times, serif;
+        }
     </style>
 </head>
 
 <body>
-    <canvas id="canvas">
+    <canvas id="canvas"> </canvas> <br>
+    <button id="startGame"> Click to Start </button> <br>
+    <h1 id="displayPause"> Pause Timer: 0 </h1>
 </body>
 
 </html>
 <script>
+
+    //MAGIC NUMBERS
+
+    var GAMESTATUS = {
+        PAUSE:0,
+        ACTIVE:1,
+        NOTSTARTED:2,
+    }
+
+    //VARS FROM HTML STRUCTURES
+
+    var startGameButton = document.getElementById("startGame");
 
     //SETTING CANVAS VARS 
 
@@ -33,6 +53,12 @@
     var ballRadius = 5;
     var puckHeight = 100;
     var goalWidth = 10;
+    var pauseTime = 500;
+    var intervalWaitTime = 10;
+
+    var currentPauseInterval = pauseTime;
+    var gameStatus = GAMESTATUS.NOTSTARTED;
+    var gameInterval;
     var ball = {
         x: 0,
         y: 0,
@@ -42,13 +68,14 @@
     var pucks = [];
     for (var i = 0; i < 2; i++) {
         pucks[i] = {
-            posy:0,
-            posx:0,
+            posy: 0,
+            posx: 0,
         }
     }
     pucks[0].posx = 0;
-    pucks[1].posx = canvas.width - goalWidth;
-    
+    pucks[1].posx = canvas.width - goalWidth - 1;
+    var goals = [goalWidth, canvas.width - goalWidth - 3];
+
 
     //GAME RELATED FUNCTIONS
 
@@ -71,22 +98,62 @@
         }
     }
 
+    //setInterval for game events
+    function gameRunner() {
+        
+        if(gameStatus === GAMESTATUS.PAUSE) {
+            currentPauseInterval -= 1;
+            document.getElementById("displayPause").innerText = "Pause Timer: " + (currentPauseInterval / (1000 / intervalWaitTime)) + "";
+            if (currentPauseInterval <= 0) {
+                currentPauseInterval = pauseTime;
+                gameStatus = GAMESTATUS.ACTIVE;
+            }
+        }
+
+        if(gameStatus === GAMESTATUS.ACTIVE) {
+            ball.x = ball.x + ball.speedx;
+            ball.y = ball.y + ball.speedy;
+            alert(ball.x)
+        }
+
+        drawBoard();
+    }
+
     //CANVAS RELATED FUNCTIONS
 
     //draws the board with the information currently given
     function drawBoard() {
-        ctx.clearRect(0,0,100000,100000);
+        ctx.clearRect(0, 0, 100000, 100000);
         ctx.fillStyle = "red";
-        ctx.arc(ball.x,ball.y,ballRadius,0,2*Math.PI);
+        ctx.arc(ball.x, ball.y, ballRadius, 0, 2 * Math.PI);
         ctx.fill();
         ctx.fillStyle = "black";
         for (var i = 0; i < 2; i++) {
-            ctx.fillRect(pucks[i].posx, pucks[i].posy, goalWidth, puckHeight);
+            ctx.fillStyle = "gray";
+            ctx.fillRect(goals[i], 0, 2, 10000);
         }
+        ctx.fillStyle = "black";
+        ctx.fillRect(pucks[0].posx, pucks[0].posy, goalWidth, puckHeight);
+        ctx.fillRect(pucks[1].posx, pucks[1].posy, goalWidth + 1, puckHeight);
 
     }
 
     newRound();
     drawBoard();
+
+    //WHEN YOU CLICK
+
+    startGameButton.addEventListener('mousedown', gameStart)
+
+    //when u click the start game button.
+    function gameStart() {
+        if (gameStatus === GAMESTATUS.NOTSTARTED) {
+            gameStatus = GAMESTATUS.PAUSE;
+            newRound();
+            gameInterval = setInterval(gameRunner,intervalWaitTime);
+        }
+    }
+
+
 
 </script>
