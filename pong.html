@@ -7,11 +7,12 @@
             border-style: solid;
             border-width: 2px;
         }
+
         #startGame {
             height: 100px;
             width: 200px;
             font-size: 35px;
-            font-family:'Times New Roman', Times, serif;
+            font-family: 'Times New Roman', Times, serif;
         }
     </style>
 </head>
@@ -28,9 +29,9 @@
     //MAGIC NUMBERS
 
     var GAMESTATUS = {
-        PAUSE:0,
-        ACTIVE:1,
-        NOTSTARTED:2,
+        PAUSE: 0,
+        ACTIVE: 1,
+        NOTSTARTED: 2,
     }
 
     //VARS FROM HTML STRUCTURES
@@ -40,7 +41,7 @@
     //SETTING CANVAS VARS 
 
     var canvas = document.getElementById("canvas");
-    var ctx = canvas.getContext('2d');
+    var ctx = canvas.getContext("2d");
 
     //CANVAS PARAMETERS
 
@@ -49,11 +50,11 @@
 
     //SETTING VARS
 
-    var speed = 5;
+    var speed = 2;
     var ballRadius = 5;
     var puckHeight = 100;
     var goalWidth = 10;
-    var pauseTime = 500;
+    var pauseTime = 200;
     var intervalWaitTime = 10;
 
     var currentPauseInterval = pauseTime;
@@ -100,8 +101,8 @@
 
     //setInterval for game events
     function gameRunner() {
-        
-        if(gameStatus === GAMESTATUS.PAUSE) {
+
+        if (gameStatus === GAMESTATUS.PAUSE) {
             currentPauseInterval -= 1;
             document.getElementById("displayPause").innerText = "Pause Timer: " + (currentPauseInterval / (1000 / intervalWaitTime)) + "";
             if (currentPauseInterval <= 0) {
@@ -110,21 +111,22 @@
             }
         }
 
-        if(gameStatus === GAMESTATUS.ACTIVE) {
-            ball.x = ball.x + ball.speedx;
-            ball.y = ball.y + ball.speedy;
-            alert(ball.x)
+        if (gameStatus === GAMESTATUS.ACTIVE) {
+            ball.x = ball.x + ball.speedX;
+            ball.y = ball.y + ball.speedY;
         }
-
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
         drawBoard();
     }
 
     //CANVAS RELATED FUNCTIONS
 
     //draws the board with the information currently given
+
     function drawBoard() {
-        ctx.clearRect(0, 0, 100000, 100000);
+        ctx.clearRect(0, 0, 10000, 10000);
         ctx.fillStyle = "red";
+        ctx.beginPath();
         ctx.arc(ball.x, ball.y, ballRadius, 0, 2 * Math.PI);
         ctx.fill();
         ctx.fillStyle = "black";
@@ -150,7 +152,7 @@
         if (gameStatus === GAMESTATUS.NOTSTARTED) {
             gameStatus = GAMESTATUS.PAUSE;
             newRound();
-            gameInterval = setInterval(gameRunner,intervalWaitTime);
+            gameInterval = setInterval(gameRunner, intervalWaitTime);
         }
     }
 
