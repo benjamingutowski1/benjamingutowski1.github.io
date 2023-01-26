@@ -21,12 +21,32 @@
     var listToSort = makeRandomList(length)
     var sortedList = listToSort
 
-    sortNumbers(listToSort)
-    //sortedList = quickSort(listToSort)
+    //sortNumbers(listToSort)
+    sortedList = quickSort(listToSort)
     showCurrentSort(sortedList)     //this exists so you can see the result of the quick sort. 
 
-    function quickSort(list){
-        
+    function quickSort(array){
+        var lessEqualSorted = [];
+        var greaterSorted = [];
+        var pivot = array[0];
+        var lessEqual = [];
+        var greater = [];
+        for (var i = 1; i < array.length; i++) {
+            if (array[i] <= pivot) {
+                lessEqual.push(array[i])
+            }
+            if (array[i] > pivot) {
+                greater.push(array[i])
+            }
+        }
+        if (lessEqual.length > 0) {
+            lessEqualSorted = quickSort(lessEqual);
+        }
+        if (greater.length > 0) {
+            greaterSorted = quickSort(greater);
+        }
+        lessEqualSorted.push(pivot);
+        return lessEqualSorted.concat(greaterSorted);
     }
 
     function sortNumbers(array) {
