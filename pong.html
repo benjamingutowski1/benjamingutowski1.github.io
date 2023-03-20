@@ -112,8 +112,20 @@
         }
 
         if (gameStatus === GAMESTATUS.ACTIVE) {
+            var hitPuck = false;
             ball.x = ball.x + ball.speedX;
             ball.y = ball.y + ball.speedY;
+            if (ball.y <= 0 || ball.y >= canvas.height) {
+                ball.speedY = ball.speedY * -1;
+            }
+            if (ball.x <= goalWidth && ball.y >= pucks[0].posy && ball.y <= pucks[0].posy + puckHeight) {
+                ball.speedX = ball.speedX * -1;
+                hitPuck = true;
+            }
+            if (ball.x >= canvas.width - goalWidth && ball.y >= pucks[1].posy && ball.y <= pucks[1].posy + puckHeight) {
+                ball.speedX = ball.speedX * -1;
+                hitPuck = true;
+            }
         }
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         drawBoard();
