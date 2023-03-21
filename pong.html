@@ -126,6 +126,13 @@
                 ball.speedX = ball.speedX * -1;
                 hitPuck = true;
             }
+            if (ball.x <= goalWidth || ball.x >= canvas.width - goalWidth) {
+                if (hitPuck === false) {
+                    currentPauseInterval = pauseTime;
+                    gameStatus = GAMESTATUS.PAUSE;
+                    newRound();
+                }
+            }
         }
         ctx.clearRect(0, 0, canvas.width, canvas.height)
         drawBoard();
