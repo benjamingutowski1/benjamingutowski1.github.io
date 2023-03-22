@@ -46,7 +46,7 @@
     //CANVAS PARAMETERS
 
     canvas.height = 500;
-    canvas.width = 1000;
+    canvas.width = 750;
 
     //SETTING VARS
 
@@ -56,6 +56,7 @@
     var goalWidth = 10;
     var pauseTime = 200;
     var intervalWaitTime = 10;
+    var puckSpeed = 5;
 
     var currentPauseInterval = pauseTime;
     var gameStatus = GAMESTATUS.NOTSTARTED;
@@ -71,6 +72,8 @@
         pucks[i] = {
             posy: 0,
             posx: 0,
+            up: false,
+            down: false
         }
     }
     pucks[0].posx = 0;
@@ -115,6 +118,26 @@
             var hitPuck = false;
             ball.x = ball.x + ball.speedX;
             ball.y = ball.y + ball.speedY;
+            if (pucks[0].up) {
+                pucks[0].posy = pucks[0].posy - puckSpeed;
+            }
+            if (pucks[0].down) {
+                pucks[0].posy = pucks[0].posy + puckSpeed;
+            }
+            if (pucks[1].up) {
+                pucks[1].posy = pucks[1].posy - puckSpeed;
+            }
+            if (pucks[1].down) {
+                pucks[1].posy = pucks[1].posy + puckSpeed;
+            }
+            for (var i = 0; i < pucks.length; i++) {
+                if (pucks[i].posy <= 0) {
+                    pucks[i].posy = 0;
+                }
+                if (pucks[i].posy >= canvas.height - puckHeight) {
+                    pucks[i].posy = canvas.height - puckHeight;
+                }
+            }
             if (ball.y <= 0 || ball.y >= canvas.height) {
                 ball.speedY = ball.speedY * -1;
             }
@@ -173,6 +196,38 @@
             newRound();
             gameInterval = setInterval(gameRunner, intervalWaitTime);
         }
+    }
+
+    //PADDLE CONTROLS
+    document.addEventListener("keydown", pressKeyDown);
+    function pressKeyDown(e) {
+        if (e.key === "w") {
+            pucks[0].up = true;
+        }
+        if (e.key === "s") {
+            pucks[0].down = true;
+        }
+        if (e.key === "ArrowUp") {
+            pucks[1].up = true;
+        }
+        if (e.key === "ArrowDown") {
+            pucks[1].down = true;
+        }
+    }
+    document.addEventListener("keyup", pressKeyUp);
+    function pressKeyUp(e) {
+        if (e.key === "w") {
+            pucks[0].up = false;
+        }
+        if (e.key === "s") {
+            pucks[0].down = false;
+        }
+        if (e.key === "ArrowUp") {
+            pucks[1].up = false;
+        }
+        if (e.key === "ArrowDown") {
+            pucks[1].down = false;
+        } 
     }
 
 
